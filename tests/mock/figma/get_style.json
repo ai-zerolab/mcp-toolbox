@@ -1,0 +1,32 @@
+{
+  "containing_file": {
+    "key": "file1",
+    "name": "UI Styles"
+  },
+  "created_at": "2023-01-01T00:00:00Z",
+  "description": "Primary brand color",
+  "key": "style1",
+  "name": "Primary Color",
+  "sort_position": "1",
+  "style_properties": {
+    "fills": [
+      {
+        "color": {
+          "a": 1,
+          "b": 0.8,
+          "g": 0.4,
+          "r": 0.2
+        },
+        "type": "SOLID"
+      }
+    ]
+  },
+  "style_type": "FILL",
+  "thumbnail_url": "https://example.com/thumbnails/style1.png",
+  "updated_at": "2023-01-02T00:00:00Z",
+  "user": {
+    "handle": "user1",
+    "id": "user1",
+    "img_url": "https://example.com/user1.png"
+  }
+}

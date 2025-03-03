@@ -1,0 +1,8 @@
+{
+  "meta": {
+    "images": {
+      "image1": "https://example.com/images/image1.png",
+      "image2": "https://example.com/images/image2.png"
+    }
+  }
+}

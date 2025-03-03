@@ -1,0 +1,20 @@
+{
+  "meta": {
+    "styles": {
+      "style1": {
+        "description": "Primary brand color",
+        "key": "style1",
+        "name": "Primary Color",
+        "remote": false,
+        "style_type": "FILL"
+      },
+      "style2": {
+        "description": "Main heading style",
+        "key": "style2",
+        "name": "Heading 1",
+        "remote": false,
+        "style_type": "TEXT"
+      }
+    }
+  }
+}

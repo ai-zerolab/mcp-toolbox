@@ -1,0 +1,16 @@
+{
+  "files": [
+    {
+      "key": "file1",
+      "last_modified": "2023-01-01T00:00:00Z",
+      "name": "File 1",
+      "thumbnail_url": "https://example.com/thumbnails/file1.png"
+    },
+    {
+      "key": "file2",
+      "last_modified": "2023-01-02T00:00:00Z",
+      "name": "File 2",
+      "thumbnail_url": "https://example.com/thumbnails/file2.png"
+    }
+  ]
+}

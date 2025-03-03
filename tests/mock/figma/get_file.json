@@ -1,0 +1,77 @@
+{
+  "components": {},
+  "document": {
+    "children": [
+      {
+        "children": [
+          {
+            "absoluteBoundingBox": {
+              "height": 100,
+              "width": 100,
+              "x": 0,
+              "y": 0
+            },
+            "background": [
+              {
+                "blendMode": "NORMAL",
+                "color": {
+                  "a": 1,
+                  "b": 1,
+                  "g": 1,
+                  "r": 1
+                },
+                "type": "SOLID"
+              }
+            ],
+            "backgroundColor": {
+              "a": 1,
+              "b": 1,
+              "g": 1,
+              "r": 1
+            },
+            "blendMode": "PASS_THROUGH",
+            "children": [],
+            "clipsContent": true,
+            "constraints": {
+              "horizontal": "LEFT",
+              "vertical": "TOP"
+            },
+            "effects": [],
+            "fills": [
+              {
+                "blendMode": "NORMAL",
+                "color": {
+                  "a": 1,
+                  "b": 1,
+                  "g": 1,
+                  "r": 1
+                },
+                "type": "SOLID"
+              }
+            ],
+            "id": "2:0",
+            "name": "Frame 1",
+            "strokeAlign": "INSIDE",
+            "strokeWeight": 1,
+            "strokes": [],
+            "type": "FRAME"
+          }
+        ],
+        "id": "1:0",
+        "name": "Page 1",
+        "type": "CANVAS"
+      }
+    ],
+    "id": "0:0",
+    "name": "Document",
+    "type": "DOCUMENT"
+  },
+  "editorType": "figma",
+  "lastModified": "2023-01-01T00:00:00Z",
+  "name": "Test File",
+  "role": "owner",
+  "schemaVersion": 0,
+  "styles": {},
+  "thumbnailUrl": "https://example.com/thumbnail.png",
+  "version": "123"
+}

@@ -1,0 +1,42 @@
+{
+  "styles": [
+    {
+      "containing_file": {
+        "key": "file1",
+        "name": "UI Styles"
+      },
+      "created_at": "2023-01-01T00:00:00Z",
+      "description": "Primary brand color",
+      "key": "style1",
+      "name": "Primary Color",
+      "sort_position": "1",
+      "style_type": "FILL",
+      "thumbnail_url": "https://example.com/thumbnails/style1.png",
+      "updated_at": "2023-01-02T00:00:00Z",
+      "user": {
+        "handle": "user1",
+        "id": "user1",
+        "img_url": "https://example.com/user1.png"
+      }
+    },
+    {
+      "containing_file": {
+        "key": "file1",
+        "name": "UI Styles"
+      },
+      "created_at": "2023-01-03T00:00:00Z",
+      "description": "Main heading style",
+      "key": "style2",
+      "name": "Heading 1",
+      "sort_position": "2",
+      "style_type": "TEXT",
+      "thumbnail_url": "https://example.com/thumbnails/style2.png",
+      "updated_at": "2023-01-04T00:00:00Z",
+      "user": {
+        "handle": "user2",
+        "id": "user2",
+        "img_url": "https://example.com/user2.png"
+      }
+    }
+  ]
+}

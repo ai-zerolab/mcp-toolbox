@@ -1,0 +1,50 @@
+{
+  "component_sets": [
+    {
+      "containing_file": {
+        "key": "file1",
+        "name": "UI Components"
+      },
+      "containing_frame": {
+        "name": "Components",
+        "node_id": "4:0",
+        "page_id": "1:0",
+        "page_name": "Page 1"
+      },
+      "created_at": "2023-01-01T00:00:00Z",
+      "description": "Button component set with variants",
+      "key": "component_set1",
+      "name": "Button",
+      "thumbnail_url": "https://example.com/thumbnails/component_set1.png",
+      "updated_at": "2023-01-02T00:00:00Z",
+      "user": {
+        "handle": "user1",
+        "id": "user1",
+        "img_url": "https://example.com/user1.png"
+      }
+    },
+    {
+      "containing_file": {
+        "key": "file1",
+        "name": "UI Components"
+      },
+      "containing_frame": {
+        "name": "Components",
+        "node_id": "4:0",
+        "page_id": "1:0",
+        "page_name": "Page 1"
+      },
+      "created_at": "2023-01-03T00:00:00Z",
+      "description": "Input field component set with variants",
+      "key": "component_set2",
+      "name": "Input Field",
+      "thumbnail_url": "https://example.com/thumbnails/component_set2.png",
+      "updated_at": "2023-01-04T00:00:00Z",
+      "user": {
+        "handle": "user2",
+        "id": "user2",
+        "img_url": "https://example.com/user2.png"
+      }
+    }
+  ]
+}

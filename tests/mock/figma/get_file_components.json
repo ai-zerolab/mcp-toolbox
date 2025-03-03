@@ -1,0 +1,30 @@
+{
+  "meta": {
+    "components": {
+      "component1": {
+        "containing_frame": {
+          "name": "Components",
+          "node_id": "4:0",
+          "page_id": "1:0",
+          "page_name": "Page 1"
+        },
+        "description": "Standard button component",
+        "key": "component1",
+        "name": "Button",
+        "remote": false
+      },
+      "component2": {
+        "containing_frame": {
+          "name": "Components",
+          "node_id": "4:0",
+          "page_id": "1:0",
+          "page_name": "Page 1"
+        },
+        "description": "Standard input field component",
+        "key": "component2",
+        "name": "Input Field",
+        "remote": false
+      }
+    }
+  }
+}

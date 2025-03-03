@@ -1,0 +1,104 @@
+{
+  "nodes": {
+    "2:0": {
+      "document": {
+        "absoluteBoundingBox": {
+          "height": 100,
+          "width": 100,
+          "x": 0,
+          "y": 0
+        },
+        "background": [
+          {
+            "blendMode": "NORMAL",
+            "color": {
+              "a": 1,
+              "b": 1,
+              "g": 1,
+              "r": 1
+            },
+            "type": "SOLID"
+          }
+        ],
+        "backgroundColor": {
+          "a": 1,
+          "b": 1,
+          "g": 1,
+          "r": 1
+        },
+        "blendMode": "PASS_THROUGH",
+        "children": [],
+        "clipsContent": true,
+        "constraints": {
+          "horizontal": "LEFT",
+          "vertical": "TOP"
+        },
+        "effects": [],
+        "fills": [
+          {
+            "blendMode": "NORMAL",
+            "color": {
+              "a": 1,
+              "b": 1,
+              "g": 1,
+              "r": 1
+            },
+            "type": "SOLID"
+          }
+        ],
+        "id": "2:0",
+        "name": "Frame 1",
+        "strokeAlign": "INSIDE",
+        "strokeWeight": 1,
+        "strokes": [],
+        "type": "FRAME"
+      }
+    },
+    "3:0": {
+      "document": {
+        "absoluteBoundingBox": {
+          "height": 20,
+          "width": 80,
+          "x": 10,
+          "y": 10
+        },
+        "blendMode": "PASS_THROUGH",
+        "characters": "Hello World",
+        "constraints": {
+          "horizontal": "LEFT",
+          "vertical": "TOP"
+        },
+        "effects": [],
+        "fills": [
+          {
+            "blendMode": "NORMAL",
+            "color": {
+              "a": 1,
+              "b": 0,
+              "g": 0,
+              "r": 0
+            },
+            "type": "SOLID"
+          }
+        ],
+        "id": "3:0",
+        "name": "Text Layer",
+        "strokeAlign": "INSIDE",
+        "strokeWeight": 1,
+        "strokes": [],
+        "style": {
+          "fontFamily": "Roboto",
+          "fontPostScriptName": "Roboto-Regular",
+          "fontSize": 14,
+          "fontWeight": 400,
+          "letterSpacing": 0,
+          "lineHeightPercent": 100,
+          "lineHeightPx": 16.4,
+          "textAlignHorizontal": "LEFT",
+          "textAlignVertical": "TOP"
+        },
+        "type": "TEXT"
+      }
+    }
+  }
+}

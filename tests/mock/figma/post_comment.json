@@ -1,0 +1,17 @@
+{
+  "client_meta": {
+    "node_id": "2:0",
+    "x": 300,
+    "y": 400
+  },
+  "created_at": "2023-01-04T00:00:00Z",
+  "id": "comment3",
+  "message": "Test comment",
+  "order_id": 3,
+  "resolved_at": null,
+  "user": {
+    "handle": "user1",
+    "id": "user1",
+    "img_url": "https://example.com/user1.png"
+  }
+}

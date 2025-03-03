@@ -1,0 +1,7 @@
+{
+  "err": null,
+  "images": {
+    "2:0": "https://example.com/images/frame1.png",
+    "3:0": "https://example.com/images/text1.png"
+  }
+}
