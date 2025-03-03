@@ -86,6 +86,15 @@ uv run generate_config_template.py
 |------|-------------|
 | `execute_command` | Execute a command line instruction |
 
+### File Operations Tools
+
+| Tool | Description |
+|------|-------------|
+| `read_file_content` | Read content from a file |
+| `write_file_content` | Write content to a file |
+| `replace_in_file` | Replace content in a file using regular expressions |
+| `list_directory` | List directory contents with detailed information |
+
 ### Figma Tools
 
 | Tool | Description |
