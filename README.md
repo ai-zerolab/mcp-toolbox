@@ -6,18 +6,56 @@
 [![Commit activity](https://img.shields.io/github/commit-activity/m/ai-zerolab/mcp-toolbox)](https://img.shields.io/github/commit-activity/m/ai-zerolab/mcp-toolbox)
 [![License](https://img.shields.io/github/license/ai-zerolab/mcp-toolbox)](https://img.shields.io/github/license/ai-zerolab/mcp-toolbox)
 
-Maintenance of a set of tools to enhance LLM through MCP protocols.
+A comprehensive toolkit for enhancing LLM capabilities through the Model Context Protocol (MCP). This package provides a collection of tools that allow LLMs to interact with external services and APIs, extending their functionality beyond text generation.
 
-- **Github repository**: <https://github.com/ai-zerolab/mcp-toolbox/>
-- **Documentation**(WIP) <https://ai-zerolab.github.io/mcp-toolbox/>
+- **GitHub repository**: <https://github.com/ai-zerolab/mcp-toolbox/>
+- (WIP)**Documentation**: <https://ai-zerolab.github.io/mcp-toolbox/>
+
+## Features
+
+> \*nix is our main target, but Windows should work too.
+
+- **Figma Integration**: Access Figma files, components, styles, and more
+- **Extensible Architecture**: Easily add new API integrations
+- **MCP Protocol Support**: Compatible with Claude Desktop and other MCP-enabled LLMs
+- **Comprehensive Testing**: Well-tested codebase with high test coverage
 
 ## Installation
 
+### Using pip
+
+```bash
+pip install mcp-toolbox
+```
+
+And you can use `mcp-toolbox stdio` as commands for running the MCP server.
+
+### Using uv (Recommended)
+
 We recommend using [uv](https://github.com/astral-sh/uv) to manage your environment.
 
-You can use `curl -LsSf https://astral.sh/uv/install.sh | sh` to install uv on macOS and Linux.
+```bash
+# Install uv
+curl -LsSf https://astral.sh/uv/install.sh | sh  # For macOS/Linux
+# or
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"  # For Windows
+```
 
-> \*nix is our main target, but Windows should work too.
+Then you can use `uvx mcp-toolbox stdio` as commands for running the MCP server.
+
+To upgrade, use `uv tool upgrade mcp-toolbox`
+
+## Configuration
+
+### Environment Variables
+
+The following environment variables can be configured:
+
+- `FIGMA_API_KEY`: API key for Figma integration
+
+### Claude Desktop Configuration
+
+To use mcp-toolbox with Claude Desktop, add the following to your Claude Desktop configuration file:
 
 ```json
 {
@@ -26,41 +64,122 @@ You can use `curl -LsSf https://astral.sh/uv/install.sh | sh` to install uv on m
       "command": "uvx",
       "args": ["mcp-toolbox", "stdio"],
       "env": {
-        "FIGMA_API_KEY": ""
+        "FIGMA_API_KEY": "your-figma-api-key"
       }
     }
   }
 }
 ```
 
-## Development
-
-Local install with uv:
+You can generate a debug configuration template using:
 
 ```bash
-make install
+uv run generate_config_template.py
 ```
 
-Run tests:
+## Available Tools
+
+### Figma Tools
+
+| Tool | Description |
+|------|-------------|
+| `figma_get_file` | Get a Figma file by key |
+| `figma_get_file_nodes` | Get specific nodes from a Figma file |
+| `figma_get_image` | Get images for nodes in a Figma file |
+| `figma_get_image_fills` | Get URLs for images used in a Figma file |
+| `figma_get_comments` | Get comments on a Figma file |
+| `figma_post_comment` | Post a comment on a Figma file |
+| `figma_delete_comment` | Delete a comment from a Figma file |
+| `figma_get_team_projects` | Get projects for a team |
+| `figma_get_project_files` | Get files for a project |
+| `figma_get_team_components` | Get components for a team |
+| `figma_get_file_components` | Get components from a file |
+| `figma_get_component` | Get a component by key |
+| `figma_get_team_component_sets` | Get component sets for a team |
+| `figma_get_team_styles` | Get styles for a team |
+| `figma_get_file_styles` | Get styles from a file |
+| `figma_get_style` | Get a style by key |
+
+## Usage Examples
+
+### Running the MCP Server
+
+```bash
+# Run with stdio transport (default)
+mcp-toolbox stdio
+
+# Run with SSE transport
+mcp-toolbox sse --host localhost --port 9871
+```
+
+### Using with Claude Desktop
+
+1. Configure Claude Desktop as shown in the Configuration section
+2. Start Claude Desktop
+3. Ask Claude to interact with Figma files:
+   - "Can you get information about this Figma file: 12345abcde?"
+   - "Show me the components in this Figma file: 12345abcde"
+   - "Get the comments from this Figma file: 12345abcde"
+
+## Development
+
+### Local Setup
+
+```bash
+# Clone the repository
+git clone https://github.com/yourusername/mcp-toolbox.git
+cd mcp-toolbox
+
+# Create and activate a virtual environment
+uv venv
+source .venv/bin/activate  # For macOS/Linux
+# or
+.venv\Scripts\activate  # For Windows
+
+# Install in development mode
+uv pip install -e ".[dev]"
+```
+
+### Running Tests
 
 ```bash
 make test
 ```
 
-Run checks:
+### Running Checks
 
 ```bash
 make check
 ```
 
-Build docs:
+### Building Documentation
 
 ```bash
 make docs
 ```
 
-Use following command to generate debug config:
+## Adding New Tools
 
-```bash
-uv run generate_config_template.py
-```
+To add a new API integration:
+
+1. Update `config.py` with any required API keys
+2. Create a new module in `mcp_toolbox/`
+3. Implement your API client and tools
+4. Add tests for your new functionality
+5. Update the README.md with new environment variables and tools
+
+See the [development guide](llms.txt) for more detailed instructions.
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## License
+
+This project is licensed under the terms of the license included in the repository.

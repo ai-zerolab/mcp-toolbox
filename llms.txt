@@ -1,0 +1,355 @@
+# MCP-Toolbox Development Guide for LLMs
+
+This guide is designed to help you (an LLM) effectively contribute to the mcp-toolbox project. It provides essential information about the project structure, development workflow, and best practices.
+
+## Project Overview
+
+MCP-Toolbox is a Python package that provides tools for enhancing LLMs through the Model Context Protocol (MCP). The project implements various API integrations as MCP tools, allowing LLMs to interact with external services.
+
+### Key Components
+
+- **mcp_toolbox/app.py**: Initializes the FastMCP server
+- **mcp_toolbox/cli.py**: Command-line interface for running the MCP server
+- **mcp_toolbox/config.py**: Configuration management using Pydantic
+- **mcp_toolbox/figma/**: Figma API integration tools
+- **tests/**: Test files for the project
+
+## Environment Setup
+
+Always help the user set up a proper development environment using `uv`. This is the preferred package manager for this project.
+
+### Setting Up the Environment
+
+```bash
+# Install uv if not already installed
+curl -LsSf https://astral.sh/uv/install.sh | sh  # For macOS/Linux
+# or
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"  # For Windows
+
+# Clone the repository (if not already done)
+git clone https://github.com/username/mcp-toolbox.git
+cd mcp-toolbox
+
+# Create and activate a virtual environment
+uv venv
+source .venv/bin/activate  # For macOS/Linux
+# or
+.venv\Scripts\activate  # For Windows
+
+# Install the package in development mode
+uv pip install -e .
+
+# Install development dependencies
+uv pip install -e ".[dev]"
+```
+
+## GitHub Workflow
+
+Always follow proper GitHub workflow when making changes:
+
+1. **Create a branch with a descriptive name**:
+   ```bash
+   # Assume the user already has their own fork
+   git checkout -b feature/add-spotify-integration
+   ```
+
+2. **Make your changes**: Implement the requested features or fixes
+
+3. **Run tests and checks**:
+   ```bash
+   make check  # Run linting and formatting
+   make test   # Run tests
+   ```
+
+4. **Commit your changes with descriptive messages**:
+   ```bash
+   git add .
+   git commit -m "feat: add Spotify API integration"
+   ```
+
+5. **Push your changes**:
+   ```bash
+   git push origin feature/add-spotify-integration
+   ```
+
+6. **Create a pull request**: Guide the user to create a PR from their branch to the main repository
+
+## Adding New Tools
+
+When adding new API integrations or tools, follow this pattern. Here's an example of adding Spotify API integration:
+
+### 1. Update Config Class
+
+First, update the `config.py` file to include the new API key:
+
+```python
+class Config(BaseSettings):
+    figma_api_key: str | None = None
+    spotify_client_id: str | None = None
+    spotify_client_secret: str | None = None
+
+    cache_dir: str = (HOME / "cache").expanduser().resolve().absolute().as_posix()
+```
+
+### 2. Create Module Structure
+
+Create a new module for the integration:
+
+```bash
+mkdir -p mcp_toolbox/spotify
+touch mcp_toolbox/spotify/__init__.py
+touch mcp_toolbox/spotify/tools.py
+```
+
+### 3. Implement API Client and Tools
+
+In `mcp_toolbox/spotify/tools.py`:
+
+```python
+import json
+from typing import Any, List, Dict, Optional
+
+import httpx
+from pydantic import BaseModel
+
+from mcp_toolbox.app import mcp
+from mcp_toolbox.config import Config
+
+
+class SpotifyApiClient:
+    BASE_URL = "https://api.spotify.com/v1"
+
+    def __init__(self):
+        self.config = Config()
+        self.access_token = None
+
+    async def get_access_token(self) -> str:
+        """Get or refresh the Spotify access token."""
+        if not self.config.spotify_client_id or not self.config.spotify_client_secret:
+            raise ValueError(
+                "Spotify credentials not provided. Set SPOTIFY_CLIENT_ID and SPOTIFY_CLIENT_SECRET environment variables."
+            )
+
+        auth_url = "https://accounts.spotify.com/api/token"
+
+        async with httpx.AsyncClient() as client:
+            response = await client.post(
+                auth_url,
+                data={"grant_type": "client_credentials"},
+                auth=(self.config.spotify_client_id, self.config.spotify_client_secret),
+            )
+            response.raise_for_status()
+            data = response.json()
+            self.access_token = data["access_token"]
+            return self.access_token
+
+    async def make_request(self, path: str, method: str = "GET", params: Dict[str, Any] = None) -> Dict[str, Any]:
+        """Make a request to the Spotify API."""
+        token = await self.get_access_token()
+
+        async with httpx.AsyncClient() as client:
+            headers = {"Authorization": f"Bearer {token}"}
+            url = f"{self.BASE_URL}{path}"
+
+            try:
+                if method == "GET":
+                    response = await client.get(url, headers=headers, params=params)
+                else:
+                    raise ValueError(f"Unsupported HTTP method: {method}")
+
+                response.raise_for_status()
+                return response.json()
+            except httpx.HTTPStatusError as e:
+                spotify_error = e.response.json() if e.response.content else {"status": e.response.status_code, "error": str(e)}
+                raise ValueError(f"Spotify API error: {spotify_error}") from e
+            except httpx.RequestError as e:
+                raise ValueError(f"Request error: {e!s}") from e
+
+
+# Initialize API client
+api_client = SpotifyApiClient()
+
+
+# Tool implementations
+@mcp.tool(
+    description="Search for tracks on Spotify. Args: query (required, The search query), limit (optional, Maximum number of results to return)"
+)
+async def spotify_search_tracks(query: str, limit: int = 10) -> Dict[str, Any]:
+    """Search for tracks on Spotify.
+
+    Args:
+        query: The search query
+        limit: Maximum number of results to return (default: 10)
+    """
+    params = {"q": query, "type": "track", "limit": limit}
+    return await api_client.make_request("/search", params=params)
+
+
+@mcp.tool(
+    description="Get details about a specific track. Args: track_id (required, The Spotify ID of the track)"
+)
+async def spotify_get_track(track_id: str) -> Dict[str, Any]:
+    """Get details about a specific track.
+
+    Args:
+        track_id: The Spotify ID of the track
+    """
+    return await api_client.make_request(f"/tracks/{track_id}")
+
+
+@mcp.tool(
+    description="Get an artist's top tracks. Args: artist_id (required, The Spotify ID of the artist), market (optional, An ISO 3166-1 alpha-2 country code)"
+)
+async def spotify_get_artist_top_tracks(artist_id: str, market: str = "US") -> Dict[str, Any]:
+    """Get an artist's top tracks.
+
+    Args:
+        artist_id: The Spotify ID of the artist
+        market: An ISO 3166-1 alpha-2 country code (default: US)
+    """
+    params = {"market": market}
+    return await api_client.make_request(f"/artists/{artist_id}/top-tracks", params=params)
+```
+
+### 4. Create Tests
+
+Create test files for your new tools:
+
+```bash
+mkdir -p tests/spotify
+touch tests/spotify/test_tools.py
+mkdir -p tests/mock/spotify
+```
+
+### 5. Update README
+
+Always update the README.md when adding new environment variables or tools:
+
+```markdown
+## Environment Variables
+
+The following environment variables can be configured:
+
+- `FIGMA_API_KEY`: API key for Figma integration
+- `SPOTIFY_CLIENT_ID`: Client ID for Spotify API
+- `SPOTIFY_CLIENT_SECRET`: Client Secret for Spotify API
+```
+
+## Error Handling Best Practices
+
+When implementing tools, follow these error handling best practices:
+
+1. **Graceful Degradation**: If one API key is missing, other tools should still work
+   ```python
+   async def get_access_token(self) -> str:
+       if not self.config.spotify_client_id or not self.config.spotify_client_secret:
+           raise ValueError(
+               "Spotify credentials not provided. Set SPOTIFY_CLIENT_ID and SPOTIFY_CLIENT_SECRET environment variables."
+           )
+       # Rest of the method...
+   ```
+
+2. **Descriptive Error Messages**: Provide clear error messages that help users understand what went wrong
+   ```python
+   except httpx.HTTPStatusError as e:
+       spotify_error = e.response.json() if e.response.content else {"status": e.response.status_code, "error": str(e)}
+       raise ValueError(f"Spotify API error: {spotify_error}") from e
+   ```
+
+3. **Proper Exception Handling**: Catch specific exceptions and handle them appropriately
+
+4. **Fallbacks**: Implement fallback mechanisms when possible
+
+## Testing
+
+Always write tests for new functionality:
+
+```python
+import json
+from pathlib import Path
+from unittest.mock import patch
+
+import pytest
+
+from mcp_toolbox.spotify.tools import (
+    SpotifyApiClient,
+    spotify_search_tracks,
+    spotify_get_track,
+    spotify_get_artist_top_tracks,
+)
+
+
+# Helper function to load mock data
+def load_mock_data(filename):
+    mock_dir = Path(__file__).parent.parent / "mock" / "spotify"
+    file_path = mock_dir / filename
+
+    if not file_path.exists():
+        # Create empty mock data if it doesn't exist
+        mock_data = {"mock": "data"}
+        with open(file_path, "w") as f:
+            json.dump(mock_data, f)
+
+    with open(file_path) as f:
+        return json.load(f)
+
+
+# Patch the SpotifyApiClient.make_request method
+@pytest.fixture
+def mock_make_request():
+    with patch.object(SpotifyApiClient, "make_request") as mock:
+        def side_effect(path, method="GET", params=None):
+            if path == "/search":
+                return load_mock_data("search_tracks.json")
+            elif path.startswith("/tracks/"):
+                return load_mock_data("get_track.json")
+            elif path.endswith("/top-tracks"):
+                return load_mock_data("get_artist_top_tracks.json")
+            return {"mock": "data"}
+
+        mock.side_effect = side_effect
+        yield mock
+
+
+# Test spotify_search_tracks function
+@pytest.mark.asyncio
+async def test_spotify_search_tracks(mock_make_request):
+    result = await spotify_search_tracks("test query")
+    mock_make_request.assert_called_once()
+    assert mock_make_request.call_args[0][0] == "/search"
+
+
+# Test spotify_get_track function
+@pytest.mark.asyncio
+async def test_spotify_get_track(mock_make_request):
+    result = await spotify_get_track("track_id")
+    mock_make_request.assert_called_once()
+    assert mock_make_request.call_args[0][0] == "/tracks/track_id"
+
+
+# Test spotify_get_artist_top_tracks function
+@pytest.mark.asyncio
+async def test_spotify_get_artist_top_tracks(mock_make_request):
+    result = await spotify_get_artist_top_tracks("artist_id")
+    mock_make_request.assert_called_once()
+    assert mock_make_request.call_args[0][0] == "/artists/artist_id/top-tracks"
+```
+
+## Documentation
+
+When adding new tools, make sure to:
+
+1. Add clear docstrings to all functions and classes
+2. Include detailed argument descriptions in the `@mcp.tool` decorator
+3. Add type hints to all functions and methods
+4. Update the README.md with new environment variables and tools
+
+## Final Checklist
+
+Before submitting your changes:
+
+1. ✅ Run `make check` to ensure code quality
+2. ✅ Run `make test` to ensure all tests pass
+3. ✅ Update documentation if needed
+4. ✅ Add new environment variables to README.md
+5. ✅ Follow proper Git workflow (branch, commit, push)
