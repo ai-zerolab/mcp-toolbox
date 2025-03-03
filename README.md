@@ -15,6 +15,7 @@ A comprehensive toolkit for enhancing LLM capabilities through the Model Context
 
 > \*nix is our main target, but Windows should work too.
 
+- **Command Line Execution**: Execute any command line instruction through LLM
 - **Figma Integration**: Access Figma files, components, styles, and more
 - **Extensible Architecture**: Easily add new API integrations
 - **MCP Protocol Support**: Compatible with Claude Desktop and other MCP-enabled LLMs
@@ -79,6 +80,12 @@ uv run generate_config_template.py
 
 ## Available Tools
 
+### Command Line Tools
+
+| Tool | Description |
+|------|-------------|
+| `execute_command` | Execute a command line instruction |
+
 ### Figma Tools
 
 | Tool | Description |
@@ -120,6 +127,10 @@ mcp-toolbox sse --host localhost --port 9871
    - "Can you get information about this Figma file: 12345abcde?"
    - "Show me the components in this Figma file: 12345abcde"
    - "Get the comments from this Figma file: 12345abcde"
+4. Ask Claude to execute command line instructions:
+   - "What files are in the current directory?"
+   - "What's the current system time?"
+   - "Show me the contents of a specific file."
 
 ## Development
 
