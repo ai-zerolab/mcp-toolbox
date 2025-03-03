@@ -7,22 +7,22 @@ import pytest
 from mcp_toolbox.figma.tools import (
     CacheManager,
     FigmaApiClient,
-    delete_comment,
-    get_comments,
-    get_component,
-    get_file,
-    get_file_components,
-    get_file_nodes,
-    get_file_styles,
-    get_image,
-    get_image_fills,
-    get_project_files,
-    get_style,
-    get_team_component_sets,
-    get_team_components,
-    get_team_projects,
-    get_team_styles,
-    post_comment,
+    figma_delete_comment,
+    figma_get_comments,
+    figma_get_component,
+    figma_get_file,
+    figma_get_file_components,
+    figma_get_file_nodes,
+    figma_get_file_styles,
+    figma_get_image,
+    figma_get_image_fills,
+    figma_get_project_files,
+    figma_get_style,
+    figma_get_team_component_sets,
+    figma_get_team_components,
+    figma_get_team_projects,
+    figma_get_team_styles,
+    figma_post_comment,
 )
 
 
@@ -131,7 +131,7 @@ def mock_save_to_cache():
 @pytest.mark.asyncio
 async def test_get_file(mock_make_request, mock_save_to_cache):
     # Test with minimal parameters
-    result = await get_file("test_file_key")
+    result = await figma_get_file("test_file_key")
 
     # Verify make_request was called with correct parameters
     mock_make_request.assert_called_once_with("/files/test_file_key")
@@ -149,7 +149,7 @@ async def test_get_file(mock_make_request, mock_save_to_cache):
     mock_save_to_cache.reset_mock()
 
     # Test with all parameters
-    result = await get_file("test_file_key", version="123", depth=2, branch_data=True)
+    result = await figma_get_file("test_file_key", version="123", depth=2, branch_data=True)
 
     # Verify make_request was called with correct parameters
     mock_make_request.assert_called_once_with("/files/test_file_key?version=123&depth=2&branch_data=True")
@@ -159,7 +159,7 @@ async def test_get_file(mock_make_request, mock_save_to_cache):
 @pytest.mark.asyncio
 async def test_get_file_nodes(mock_make_request, mock_save_to_cache):
     # Test with minimal parameters
-    result = await get_file_nodes("test_file_key", ["node1", "node2"])
+    result = await figma_get_file_nodes("test_file_key", ["node1", "node2"])
 
     # Verify make_request was called with correct parameters
     mock_make_request.assert_called_once_with("/files/test_file_key/nodes?ids=node1,node2")
@@ -177,7 +177,7 @@ async def test_get_file_nodes(mock_make_request, mock_save_to_cache):
     mock_save_to_cache.reset_mock()
 
     # Test with all parameters
-    result = await get_file_nodes("test_file_key", ["node1", "node2"], depth=2, version="123")
+    result = await figma_get_file_nodes("test_file_key", ["node1", "node2"], depth=2, version="123")
 
     # Verify make_request was called with correct parameters
     mock_make_request.assert_called_once_with("/files/test_file_key/nodes?ids=node1,node2&depth=2&version=123")
@@ -187,7 +187,7 @@ async def test_get_file_nodes(mock_make_request, mock_save_to_cache):
 @pytest.mark.asyncio
 async def test_get_image(mock_make_request):
     # Test with minimal parameters
-    result = await get_image("test_file_key", ["node1", "node2"])
+    result = await figma_get_image("test_file_key", ["node1", "node2"])
 
     # Verify make_request was called with correct parameters
     mock_make_request.assert_called_once_with("/images/test_file_key?ids=node1,node2")
@@ -196,11 +196,11 @@ async def test_get_image(mock_make_request):
     mock_make_request.reset_mock()
 
     # Test with all parameters
-    result = await get_image(
+    result = await figma_get_image(
         "test_file_key",
         ["node1", "node2"],
         scale=2.0,
-        format="png",
+        format_type="png",
         svg_include_id=True,
         svg_simplify_stroke=True,
         use_absolute_bounds=True,
@@ -215,7 +215,7 @@ async def test_get_image(mock_make_request):
 # Test get_image_fills function
 @pytest.mark.asyncio
 async def test_get_image_fills(mock_make_request):
-    result = await get_image_fills("test_file_key")
+    result = await figma_get_image_fills("test_file_key")
 
     # Verify make_request was called with correct parameters
     mock_make_request.assert_called_once_with("/files/test_file_key/images")
@@ -224,7 +224,7 @@ async def test_get_image_fills(mock_make_request):
 # Test get_comments function
 @pytest.mark.asyncio
 async def test_get_comments(mock_make_request):
-    result = await get_comments("test_file_key")
+    result = await figma_get_comments("test_file_key")
 
     # Verify make_request was called with correct parameters
     mock_make_request.assert_called_once_with("/files/test_file_key/comments")
@@ -234,7 +234,7 @@ async def test_get_comments(mock_make_request):
 @pytest.mark.asyncio
 async def test_post_comment(mock_make_request):
     # Test with minimal parameters
-    result = await post_comment("test_file_key", "Test comment")
+    result = await figma_post_comment("test_file_key", "Test comment")
 
     # Verify make_request was called with correct parameters
     mock_make_request.assert_called_once_with("/files/test_file_key/comments", "POST", {"message": "Test comment"})
@@ -245,7 +245,7 @@ async def test_post_comment(mock_make_request):
     # Test with all parameters
     client_meta = {"x": 100, "y": 200, "node_id": "node1", "node_offset": {"x": 10, "y": 20}}
 
-    result = await post_comment("test_file_key", "Test comment", client_meta=client_meta, comment_id="comment1")
+    result = await figma_post_comment("test_file_key", "Test comment", client_meta=client_meta, comment_id="comment1")
 
     # Verify make_request was called with correct parameters
     mock_make_request.assert_called_once_with(
@@ -258,7 +258,7 @@ async def test_post_comment(mock_make_request):
 # Test delete_comment function
 @pytest.mark.asyncio
 async def test_delete_comment(mock_make_request):
-    result = await delete_comment("test_file_key", "comment1")
+    result = await figma_delete_comment("test_file_key", "comment1")
 
     # Verify make_request was called with correct parameters
     mock_make_request.assert_called_once_with("/files/test_file_key/comments/comment1", "DELETE")
@@ -268,7 +268,7 @@ async def test_delete_comment(mock_make_request):
 @pytest.mark.asyncio
 async def test_get_team_projects(mock_make_request):
     # Test with minimal parameters
-    result = await get_team_projects("team1")
+    result = await figma_get_team_projects("team1")
 
     # Verify make_request was called with correct parameters
     mock_make_request.assert_called_once_with("/teams/team1/projects")
@@ -277,7 +277,7 @@ async def test_get_team_projects(mock_make_request):
     mock_make_request.reset_mock()
 
     # Test with all parameters
-    result = await get_team_projects("team1", page_size=10, cursor="cursor1")
+    result = await figma_get_team_projects("team1", page_size=10, cursor="cursor1")
 
     # Verify make_request was called with correct parameters
     mock_make_request.assert_called_once_with("/teams/team1/projects?page_size=10&cursor=cursor1")
@@ -287,7 +287,7 @@ async def test_get_team_projects(mock_make_request):
 @pytest.mark.asyncio
 async def test_get_project_files(mock_make_request):
     # Test with minimal parameters
-    result = await get_project_files("project1")
+    result = await figma_get_project_files("project1")
 
     # Verify make_request was called with correct parameters
     mock_make_request.assert_called_once_with("/projects/project1/files")
@@ -296,7 +296,7 @@ async def test_get_project_files(mock_make_request):
     mock_make_request.reset_mock()
 
     # Test with all parameters
-    result = await get_project_files("project1", page_size=10, cursor="cursor1", branch_data=True)
+    result = await figma_get_project_files("project1", page_size=10, cursor="cursor1", branch_data=True)
 
     # Verify make_request was called with correct parameters
     mock_make_request.assert_called_once_with("/projects/project1/files?page_size=10&cursor=cursor1&branch_data=True")
@@ -306,7 +306,7 @@ async def test_get_project_files(mock_make_request):
 @pytest.mark.asyncio
 async def test_get_team_components(mock_make_request):
     # Test with minimal parameters
-    result = await get_team_components("team1")
+    result = await figma_get_team_components("team1")
 
     # Verify make_request was called with correct parameters
     mock_make_request.assert_called_once_with("/teams/team1/components")
@@ -315,7 +315,7 @@ async def test_get_team_components(mock_make_request):
     mock_make_request.reset_mock()
 
     # Test with all parameters
-    result = await get_team_components("team1", page_size=10, cursor="cursor1")
+    result = await figma_get_team_components("team1", page_size=10, cursor="cursor1")
 
     # Verify make_request was called with correct parameters
     mock_make_request.assert_called_once_with("/teams/team1/components?page_size=10&cursor=cursor1")
@@ -324,7 +324,7 @@ async def test_get_team_components(mock_make_request):
 # Test get_file_components function
 @pytest.mark.asyncio
 async def test_get_file_components(mock_make_request):
-    result = await get_file_components("test_file_key")
+    result = await figma_get_file_components("test_file_key")
 
     # Verify make_request was called with correct parameters
     mock_make_request.assert_called_once_with("/files/test_file_key/components")
@@ -333,7 +333,7 @@ async def test_get_file_components(mock_make_request):
 # Test get_component function
 @pytest.mark.asyncio
 async def test_get_component(mock_make_request):
-    result = await get_component("component1")
+    result = await figma_get_component("component1")
 
     # Verify make_request was called with correct parameters
     mock_make_request.assert_called_once_with("/components/component1")
@@ -343,7 +343,7 @@ async def test_get_component(mock_make_request):
 @pytest.mark.asyncio
 async def test_get_team_component_sets(mock_make_request):
     # Test with minimal parameters
-    result = await get_team_component_sets("team1")
+    result = await figma_get_team_component_sets("team1")
 
     # Verify make_request was called with correct parameters
     mock_make_request.assert_called_once_with("/teams/team1/component_sets")
@@ -352,7 +352,7 @@ async def test_get_team_component_sets(mock_make_request):
     mock_make_request.reset_mock()
 
     # Test with all parameters
-    result = await get_team_component_sets("team1", page_size=10, cursor="cursor1")
+    result = await figma_get_team_component_sets("team1", page_size=10, cursor="cursor1")
 
     # Verify make_request was called with correct parameters
     mock_make_request.assert_called_once_with("/teams/team1/component_sets?page_size=10&cursor=cursor1")
@@ -362,7 +362,7 @@ async def test_get_team_component_sets(mock_make_request):
 @pytest.mark.asyncio
 async def test_get_team_styles(mock_make_request):
     # Test with minimal parameters
-    result = await get_team_styles("team1")
+    result = await figma_get_team_styles("team1")
 
     # Verify make_request was called with correct parameters
     mock_make_request.assert_called_once_with("/teams/team1/styles")
@@ -371,7 +371,7 @@ async def test_get_team_styles(mock_make_request):
     mock_make_request.reset_mock()
 
     # Test with all parameters
-    result = await get_team_styles("team1", page_size=10, cursor="cursor1")
+    result = await figma_get_team_styles("team1", page_size=10, cursor="cursor1")
 
     # Verify make_request was called with correct parameters
     mock_make_request.assert_called_once_with("/teams/team1/styles?page_size=10&cursor=cursor1")
@@ -380,7 +380,7 @@ async def test_get_team_styles(mock_make_request):
 # Test get_file_styles function
 @pytest.mark.asyncio
 async def test_get_file_styles(mock_make_request):
-    result = await get_file_styles("test_file_key")
+    result = await figma_get_file_styles("test_file_key")
 
     # Verify make_request was called with correct parameters
     mock_make_request.assert_called_once_with("/files/test_file_key/styles")
@@ -389,7 +389,7 @@ async def test_get_file_styles(mock_make_request):
 # Test get_style function
 @pytest.mark.asyncio
 async def test_get_style(mock_make_request):
-    result = await get_style("style1")
+    result = await figma_get_style("style1")
 
     # Verify make_request was called with correct parameters
     mock_make_request.assert_called_once_with("/styles/style1")

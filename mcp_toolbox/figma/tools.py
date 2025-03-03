@@ -96,8 +96,10 @@ cache_manager = CacheManager()
 
 
 # Tool implementations
-@mcp.tool(description="Get a Figma file by key")
-async def get_file(
+@mcp.tool(
+    description="Get a Figma file by key. Args: fileKey (required, The key of the file to get), version (optional, A specific version ID to get), depth (optional, Depth of nodes to return 1-4), branch_data (optional, Include branch data if true)"
+)
+async def figma_get_file(
     fileKey: str, version: str | None = None, depth: int | None = None, branch_data: bool | None = None
 ) -> dict[str, Any]:
     """Get a Figma file by key.
@@ -126,8 +128,10 @@ async def get_file(
         return result
 
 
-@mcp.tool(description="Get specific nodes from a Figma file")
-async def get_file_nodes(
+@mcp.tool(
+    description="Get specific nodes from a Figma file. Args: fileKey (required, The key of the file to get nodes from), node_ids (required, Array of node IDs to get), depth (optional, Depth of nodes to return 1-4), version (optional, A specific version ID to get)"
+)
+async def figma_get_file_nodes(
     fileKey: str, node_ids: list[str], depth: int | None = None, version: str | None = None
 ) -> dict[str, Any]:
     """Get specific nodes from a Figma file.
@@ -156,8 +160,10 @@ async def get_file_nodes(
         return result
 
 
-@mcp.tool(description="Get images for nodes in a Figma file")
-async def get_image(
+@mcp.tool(
+    description="Get images for nodes in a Figma file. Args: fileKey (required, The key of the file to get images from), ids (required, Array of node IDs to render), scale (optional, Scale factor to render at 0.01-4), format_type (optional, Image format jpg/png/svg/pdf), svg_include_id (optional, Include IDs in SVG output), svg_simplify_stroke (optional, Simplify strokes in SVG output), use_absolute_bounds (optional, Use absolute bounds)"
+)
+async def figma_get_image(
     fileKey: str,
     ids: list[str],
     scale: float | None = None,
@@ -190,8 +196,10 @@ async def get_image(
     return await api_client.make_request(f"/images/{fileKey}{query_string}")
 
 
-@mcp.tool(description="Get URLs for images used in a Figma file")
-async def get_image_fills(fileKey: str) -> dict[str, Any]:
+@mcp.tool(
+    description="Get URLs for images used in a Figma file. Args: fileKey (required, The key of the file to get image fills from)"
+)
+async def figma_get_image_fills(fileKey: str) -> dict[str, Any]:
     """Get URLs for images used in a Figma file.
 
     Args:
@@ -200,8 +208,10 @@ async def get_image_fills(fileKey: str) -> dict[str, Any]:
     return await api_client.make_request(f"/files/{fileKey}/images")
 
 
-@mcp.tool(description="Get comments on a Figma file")
-async def get_comments(fileKey: str) -> dict[str, Any]:
+@mcp.tool(
+    description="Get comments on a Figma file. Args: fileKey (required, The key of the file to get comments from)"
+)
+async def figma_get_comments(fileKey: str) -> dict[str, Any]:
     """Get comments on a Figma file.
 
     Args:
@@ -210,8 +220,10 @@ async def get_comments(fileKey: str) -> dict[str, Any]:
     return await api_client.make_request(f"/files/{fileKey}/comments")
 
 
-@mcp.tool(description="Post a comment on a Figma file")
-async def post_comment(
+@mcp.tool(
+    description="Post a comment on a Figma file. Args: fileKey (required, The key of the file to comment on), message (required, Comment message text), client_meta (optional, Position of the comment x/y/node_id/node_offset), comment_id (optional, ID of comment to reply to)"
+)
+async def figma_post_comment(
     fileKey: str, message: str, client_meta: dict[str, Any] | None = None, comment_id: str | None = None
 ) -> dict[str, Any]:
     """Post a comment on a Figma file.
@@ -233,8 +245,10 @@ async def post_comment(
     return await api_client.make_request(f"/files/{fileKey}/comments", "POST", comment_data)
 
 
-@mcp.tool(description="Delete a comment from a Figma file")
-async def delete_comment(fileKey: str, comment_id: str) -> dict[str, Any]:
+@mcp.tool(
+    description="Delete a comment from a Figma file. Args: fileKey (required, The key of the file to delete a comment from), comment_id (required, ID of the comment to delete)"
+)
+async def figma_delete_comment(fileKey: str, comment_id: str) -> dict[str, Any]:
     """Delete a comment from a Figma file.
 
     Args:
@@ -244,8 +258,12 @@ async def delete_comment(fileKey: str, comment_id: str) -> dict[str, Any]:
     return await api_client.make_request(f"/files/{fileKey}/comments/{comment_id}", "DELETE")
 
 
-@mcp.tool(description="Get projects for a team")
-async def get_team_projects(team_id: str, page_size: int | None = None, cursor: str | None = None) -> dict[str, Any]:
+@mcp.tool(
+    description="Get projects for a team. Args: team_id (required, The team ID), page_size (optional, Number of items per page), cursor (optional, Cursor for pagination)"
+)
+async def figma_get_team_projects(
+    team_id: str, page_size: int | None = None, cursor: str | None = None
+) -> dict[str, Any]:
     """Get projects for a team.
 
     Args:
@@ -259,8 +277,10 @@ async def get_team_projects(team_id: str, page_size: int | None = None, cursor: 
     return await api_client.make_request(f"/teams/{team_id}/projects{query_string}")
 
 
-@mcp.tool(description="Get files for a project")
-async def get_project_files(
+@mcp.tool(
+    description="Get files for a project. Args: project_id (required, The project ID), page_size (optional, Number of items per page), cursor (optional, Cursor for pagination), branch_data (optional, Include branch data if true)"
+)
+async def figma_get_project_files(
     project_id: str, page_size: int | None = None, cursor: str | None = None, branch_data: bool | None = None
 ) -> dict[str, Any]:
     """Get files for a project.
@@ -277,8 +297,12 @@ async def get_project_files(
     return await api_client.make_request(f"/projects/{project_id}/files{query_string}")
 
 
-@mcp.tool(description="Get components for a team")
-async def get_team_components(team_id: str, page_size: int | None = None, cursor: str | None = None) -> dict[str, Any]:
+@mcp.tool(
+    description="Get components for a team. Args: team_id (required, The team ID), page_size (optional, Number of items per page), cursor (optional, Cursor for pagination)"
+)
+async def figma_get_team_components(
+    team_id: str, page_size: int | None = None, cursor: str | None = None
+) -> dict[str, Any]:
     """Get components for a team.
 
     Args:
@@ -292,8 +316,10 @@ async def get_team_components(team_id: str, page_size: int | None = None, cursor
     return await api_client.make_request(f"/teams/{team_id}/components{query_string}")
 
 
-@mcp.tool(description="Get components from a file")
-async def get_file_components(fileKey: str) -> dict[str, Any]:
+@mcp.tool(
+    description="Get components from a file. Args: fileKey (required, The key of the file to get components from)"
+)
+async def figma_get_file_components(fileKey: str) -> dict[str, Any]:
     """Get components from a file.
 
     Args:
@@ -302,8 +328,8 @@ async def get_file_components(fileKey: str) -> dict[str, Any]:
     return await api_client.make_request(f"/files/{fileKey}/components")
 
 
-@mcp.tool(description="Get a component by key")
-async def get_component(key: str) -> dict[str, Any]:
+@mcp.tool(description="Get a component by key. Args: key (required, The component key)")
+async def figma_get_component(key: str) -> dict[str, Any]:
     """Get a component by key.
 
     Args:
@@ -312,8 +338,10 @@ async def get_component(key: str) -> dict[str, Any]:
     return await api_client.make_request(f"/components/{key}")
 
 
-@mcp.tool(description="Get component sets for a team")
-async def get_team_component_sets(
+@mcp.tool(
+    description="Get component sets for a team. Args: team_id (required, The team ID), page_size (optional, Number of items per page), cursor (optional, Cursor for pagination)"
+)
+async def figma_get_team_component_sets(
     team_id: str, page_size: int | None = None, cursor: str | None = None
 ) -> dict[str, Any]:
     """Get component sets for a team.
@@ -329,8 +357,12 @@ async def get_team_component_sets(
     return await api_client.make_request(f"/teams/{team_id}/component_sets{query_string}")
 
 
-@mcp.tool(description="Get styles for a team")
-async def get_team_styles(team_id: str, page_size: int | None = None, cursor: str | None = None) -> dict[str, Any]:
+@mcp.tool(
+    description="Get styles for a team. Args: team_id (required, The team ID), page_size (optional, Number of items per page), cursor (optional, Cursor for pagination)"
+)
+async def figma_get_team_styles(
+    team_id: str, page_size: int | None = None, cursor: str | None = None
+) -> dict[str, Any]:
     """Get styles for a team.
 
     Args:
@@ -344,8 +376,8 @@ async def get_team_styles(team_id: str, page_size: int | None = None, cursor: st
     return await api_client.make_request(f"/teams/{team_id}/styles{query_string}")
 
 
-@mcp.tool(description="Get styles from a file")
-async def get_file_styles(fileKey: str) -> dict[str, Any]:
+@mcp.tool(description="Get styles from a file. Args: fileKey (required, The key of the file to get styles from)")
+async def figma_get_file_styles(fileKey: str) -> dict[str, Any]:
     """Get styles from a file.
 
     Args:
@@ -354,8 +386,8 @@ async def get_file_styles(fileKey: str) -> dict[str, Any]:
     return await api_client.make_request(f"/files/{fileKey}/styles")
 
 
-@mcp.tool(description="Get a style by key")
-async def get_style(key: str) -> dict[str, Any]:
+@mcp.tool(description="Get a style by key. Args: key (required, The style key)")
+async def figma_get_style(key: str) -> dict[str, Any]:
     """Get a style by key.
 
     Args:
