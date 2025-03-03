@@ -1,0 +1,52 @@
+site_name: mcp-toolbox
+repo_url: https://github.com/ai-zerolab/mcp-toolbox
+site_url: https://ai-zerolab.github.io/mcp-toolbox
+site_description: Maintenance of a set of tools to enhance LLM through MCP protocols.
+site_author: ai-zerolab
+edit_uri: edit/main/docs/
+repo_name: ai-zerolab/mcp-toolbox
+copyright: Maintained by <a href="https://ai-zerolab.com">ai-zerolab</a>.
+
+nav:
+  - Home: index.md
+  - Modules: modules.md
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          paths: ["mcp_toolbox"]
+theme:
+  name: material
+  feature:
+    tabs: true
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: white
+      accent: deep orange
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: black
+      accent: deep orange
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  icon:
+    repo: fontawesome/brands/github
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/ai-zerolab/mcp-toolbox
+    - icon: fontawesome/brands/python
+      link: https://pypi.org/project/mcp-toolbox
+
+markdown_extensions:
+  - toc:
+      permalink: true
+  - pymdownx.arithmatex:
+      generic: true
