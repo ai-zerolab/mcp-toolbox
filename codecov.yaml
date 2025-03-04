@@ -7,5 +7,10 @@ coverage:
       default:
         target: 90%
         threshold: 0.5%
+    patch:
+      default:
+        target: auto
+        threshold: 0%
+        informational: true
 codecov:
  token: f927bff4-d404-4986-8c11-624eadda8431
