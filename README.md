@@ -6,7 +6,6 @@
 [![Commit activity](https://img.shields.io/github/commit-activity/m/ai-zerolab/mcp-toolbox)](https://img.shields.io/github/commit-activity/m/ai-zerolab/mcp-toolbox)
 [![License](https://img.shields.io/github/license/ai-zerolab/mcp-toolbox)](https://img.shields.io/github/license/ai-zerolab/mcp-toolbox)
 
-
 A comprehensive toolkit for enhancing LLM capabilities through the Model Context Protocol (MCP). This package provides a collection of tools that allow LLMs to interact with external services and APIs, extending their functionality beyond text generation.
 
 - **GitHub repository**: <https://github.com/ai-zerolab/mcp-toolbox/>
@@ -23,7 +22,6 @@ A comprehensive toolkit for enhancing LLM capabilities through the Model Context
 - **Comprehensive Testing**: Well-tested codebase with high test coverage
 
 ## Installation
-
 
 ### Using uv (Recommended)
 
@@ -53,8 +51,6 @@ pip install mcp-toolbox
 ```
 
 And you can use `mcp-toolbox stdio` as commands for running the MCP server.
-
-
 
 ## Configuration
 
@@ -92,39 +88,39 @@ uv run generate_config_template.py
 
 ### Command Line Tools
 
-| Tool | Description |
-|------|-------------|
+| Tool              | Description                        |
+| ----------------- | ---------------------------------- |
 | `execute_command` | Execute a command line instruction |
 
 ### File Operations Tools
 
-| Tool | Description |
-|------|-------------|
-| `read_file_content` | Read content from a file |
-| `write_file_content` | Write content to a file |
-| `replace_in_file` | Replace content in a file using regular expressions |
-| `list_directory` | List directory contents with detailed information |
+| Tool                 | Description                                         |
+| -------------------- | --------------------------------------------------- |
+| `read_file_content`  | Read content from a file                            |
+| `write_file_content` | Write content to a file                             |
+| `replace_in_file`    | Replace content in a file using regular expressions |
+| `list_directory`     | List directory contents with detailed information   |
 
 ### Figma Tools
 
-| Tool | Description |
-|------|-------------|
-| `figma_get_file` | Get a Figma file by key |
-| `figma_get_file_nodes` | Get specific nodes from a Figma file |
-| `figma_get_image` | Get images for nodes in a Figma file |
-| `figma_get_image_fills` | Get URLs for images used in a Figma file |
-| `figma_get_comments` | Get comments on a Figma file |
-| `figma_post_comment` | Post a comment on a Figma file |
-| `figma_delete_comment` | Delete a comment from a Figma file |
-| `figma_get_team_projects` | Get projects for a team |
-| `figma_get_project_files` | Get files for a project |
-| `figma_get_team_components` | Get components for a team |
-| `figma_get_file_components` | Get components from a file |
-| `figma_get_component` | Get a component by key |
-| `figma_get_team_component_sets` | Get component sets for a team |
-| `figma_get_team_styles` | Get styles for a team |
-| `figma_get_file_styles` | Get styles from a file |
-| `figma_get_style` | Get a style by key |
+| Tool                            | Description                              |
+| ------------------------------- | ---------------------------------------- |
+| `figma_get_file`                | Get a Figma file by key                  |
+| `figma_get_file_nodes`          | Get specific nodes from a Figma file     |
+| `figma_get_image`               | Get images for nodes in a Figma file     |
+| `figma_get_image_fills`         | Get URLs for images used in a Figma file |
+| `figma_get_comments`            | Get comments on a Figma file             |
+| `figma_post_comment`            | Post a comment on a Figma file           |
+| `figma_delete_comment`          | Delete a comment from a Figma file       |
+| `figma_get_team_projects`       | Get projects for a team                  |
+| `figma_get_project_files`       | Get files for a project                  |
+| `figma_get_team_components`     | Get components for a team                |
+| `figma_get_file_components`     | Get components from a file               |
+| `figma_get_component`           | Get a component by key                   |
+| `figma_get_team_component_sets` | Get component sets for a team            |
+| `figma_get_team_styles`         | Get styles for a team                    |
+| `figma_get_file_styles`         | Get styles from a file                   |
+| `figma_get_style`               | Get a style by key                       |
 
 ## Usage Examples
 
@@ -141,12 +137,12 @@ mcp-toolbox sse --host localhost --port 9871
 ### Using with Claude Desktop
 
 1. Configure Claude Desktop as shown in the Configuration section
-2. Start Claude Desktop
-3. Ask Claude to interact with Figma files:
+1. Start Claude Desktop
+1. Ask Claude to interact with Figma files:
    - "Can you get information about this Figma file: 12345abcde?"
    - "Show me the components in this Figma file: 12345abcde"
    - "Get the comments from this Figma file: 12345abcde"
-4. Ask Claude to execute command line instructions:
+1. Ask Claude to execute command line instructions:
    - "What files are in the current directory?"
    - "What's the current system time?"
    - "Show me the contents of a specific file."
@@ -193,10 +189,10 @@ make docs
 To add a new API integration:
 
 1. Update `config.py` with any required API keys
-2. Create a new module in `mcp_toolbox/`
-3. Implement your API client and tools
-4. Add tests for your new functionality
-5. Update the README.md with new environment variables and tools
+1. Create a new module in `mcp_toolbox/`
+1. Implement your API client and tools
+1. Add tests for your new functionality
+1. Update the README.md with new environment variables and tools
 
 See the [development guide](llms.txt) for more detailed instructions.
 
@@ -205,10 +201,10 @@ See the [development guide](llms.txt) for more detailed instructions.
 Contributions are welcome! Please feel free to submit a Pull Request.
 
 1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+1. Create a feature branch (`git checkout -b feature/amazing-feature`)
+1. Commit your changes (`git commit -m 'Add some amazing feature'`)
+1. Push to the branch (`git push origin feature/amazing-feature`)
+1. Open a Pull Request
 
 ## License
 
