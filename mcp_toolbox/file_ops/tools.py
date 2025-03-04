@@ -10,17 +10,21 @@ from mcp_toolbox.app import mcp
 
 
 @mcp.tool(
-    description="Read file content. Args: path (required, Path to the file to read), encoding (optional, File encoding)"
+    description="Read file content. Args: path (required, Path to the file to read), encoding (optional, File encoding), chunk_size (optional, Size of each chunk in bytes), chunk_index (optional, Index of the chunk to retrieve, 0-based)"
 )
-async def read_file_content(path: str, encoding: str = "utf-8") -> dict[str, Any]:
-    """Read content from a file.
+async def read_file_content(
+    path: str, encoding: str = "utf-8", chunk_size: int = 1048576, chunk_index: int = 0
+) -> dict[str, Any]:
+    """Read content from a file, with support for chunked reading for large files.
 
     Args:
         path: Path to the file to read
         encoding: Optional. File encoding (default: utf-8)
+        chunk_size: Optional. Size of each chunk in bytes (default: 1048576, which is 1MB)
+        chunk_index: Optional. Index of the chunk to retrieve, 0-based (default: 0)
 
     Returns:
-        Dictionary containing content and metadata
+        Dictionary containing content and metadata, including chunking information
     """
     try:
         file_path = Path(path).expanduser()
@@ -41,14 +45,51 @@ async def read_file_content(path: str, encoding: str = "utf-8") -> dict[str, Any
 
         # Get file stats
         stats = file_path.stat()
+        file_size = stats.st_size
 
-        # Read file content
-        with open(file_path, encoding=encoding) as f:
-            content = f.read()
+        # Calculate total chunks
+        total_chunks = (file_size + chunk_size - 1) // chunk_size  # Ceiling division
+
+        # Validate chunk_index
+        if chunk_index < 0 or (file_size > 0 and chunk_index >= total_chunks):
+            return {
+                "error": f"Invalid chunk index: {chunk_index}. Valid range is 0 to {total_chunks - 1}",
+                "content": "",
+                "success": False,
+                "total_chunks": total_chunks,
+                "file_size": file_size,
+            }
+
+        # Calculate start and end positions for the chunk
+        start_pos = chunk_index * chunk_size
+        end_pos = min(start_pos + chunk_size, file_size)
+        chunk_actual_size = end_pos - start_pos
+
+        # Read the specified chunk
+        content = ""
+        with open(file_path, "rb") as f:
+            f.seek(start_pos)
+            chunk_bytes = f.read(chunk_actual_size)
+
+            try:
+                # Try to decode as text
+                content = chunk_bytes.decode(encoding, errors="replace")
+            except UnicodeDecodeError:
+                # If decoding fails, return base64 encoded binary data
+                import base64
+
+                content = base64.b64encode(chunk_bytes).decode("ascii")
+                encoding = f"base64 (original: {encoding})"
 
         return {
             "content": content,
-            "size": stats.st_size,
+            "size": file_size,
+            "chunk_size": chunk_size,
+            "chunk_index": chunk_index,
+            "chunk_actual_size": chunk_actual_size,
+            "total_chunks": total_chunks,
+            "is_last_chunk": chunk_index == total_chunks - 1,
+            "encoding": encoding,
             "last_modified": datetime.fromtimestamp(stats.st_mtime).isoformat(),
             "success": True,
         }

@@ -97,15 +97,18 @@ cache_manager = CacheManager()
 
 # Tool implementations
 @mcp.tool(
-    description="Get a Figma file by key. Args: fileKey (required, The key of the file to get), version (optional, A specific version ID to get), depth (optional, Depth of nodes to return 1-4), branch_data (optional, Include branch data if true)"
+    description="Get a Figma file by key. Args: file_key (required, The key of the file to get), version (optional, A specific version ID to get), depth (optional, Depth of nodes to return 1-4), branch_data (optional, Include branch data if true)"
 )
 async def figma_get_file(
-    fileKey: str, version: str | None = None, depth: int | None = None, branch_data: bool | None = None
+    file_key: str,
+    version: str | None = None,
+    depth: int | None = None,
+    branch_data: bool | None = None,
 ) -> dict[str, Any]:
     """Get a Figma file by key.
 
     Args:
-        fileKey: The key of the file to get
+        file_key: The key of the file to get
         version: Optional. A specific version ID to get
         depth: Optional. Depth of nodes to return (1-4)
         branch_data: Optional. Include branch data if true
@@ -113,11 +116,11 @@ async def figma_get_file(
     params = {"version": version, "depth": depth, "branch_data": branch_data}
 
     query_string = api_client.build_query_string(params)
-    result = await api_client.make_request(f"/files/{fileKey}{query_string}")
+    result = await api_client.make_request(f"/files/{file_key}{query_string}")
 
     # Save to cache
     try:
-        filename = f"file_{fileKey}_{int(time.time() * 1000)}.json"
+        filename = f"file_{file_key}_{int(time.time() * 1000)}.json"
         file_path = cache_manager.save_to_cache(filename, result)
         return {
             "file_path": file_path,
@@ -129,15 +132,18 @@ async def figma_get_file(
 
 
 @mcp.tool(
-    description="Get specific nodes from a Figma file. Args: fileKey (required, The key of the file to get nodes from), node_ids (required, Array of node IDs to get), depth (optional, Depth of nodes to return 1-4), version (optional, A specific version ID to get)"
+    description="Get specific nodes from a Figma file. Args: file_key (required, The key of the file to get nodes from), node_ids (required, Array of node IDs to get), depth (optional, Depth of nodes to return 1-4), version (optional, A specific version ID to get)"
 )
 async def figma_get_file_nodes(
-    fileKey: str, node_ids: list[str], depth: int | None = None, version: str | None = None
+    file_key: str,
+    node_ids: list[str],
+    depth: int | None = None,
+    version: str | None = None,
 ) -> dict[str, Any]:
     """Get specific nodes from a Figma file.
 
     Args:
-        fileKey: The key of the file to get nodes from
+        file_key: The key of the file to get nodes from
         node_ids: Array of node IDs to get
         depth: Optional. Depth of nodes to return (1-4)
         version: Optional. A specific version ID to get
@@ -145,11 +151,11 @@ async def figma_get_file_nodes(
     params = {"ids": node_ids, "depth": depth, "version": version}
 
     query_string = api_client.build_query_string(params)
-    result = await api_client.make_request(f"/files/{fileKey}/nodes{query_string}")
+    result = await api_client.make_request(f"/files/{file_key}/nodes{query_string}")
 
     # Save to cache
     try:
-        filename = f"file_nodes_{fileKey}_{int(time.time() * 1000)}.json"
+        filename = f"file_nodes_{file_key}_{int(time.time() * 1000)}.json"
         file_path = cache_manager.save_to_cache(filename, result)
         return {
             "file_path": file_path,
@@ -161,10 +167,10 @@ async def figma_get_file_nodes(
 
 
 @mcp.tool(
-    description="Get images for nodes in a Figma file. Args: fileKey (required, The key of the file to get images from), ids (required, Array of node IDs to render), scale (optional, Scale factor to render at 0.01-4), format_type (optional, Image format jpg/png/svg/pdf), svg_include_id (optional, Include IDs in SVG output), svg_simplify_stroke (optional, Simplify strokes in SVG output), use_absolute_bounds (optional, Use absolute bounds)"
+    description="Get images for nodes in a Figma file. Args: file_key (required, The key of the file to get images from), ids (required, Array of node IDs to render), scale (optional, Scale factor to render at 0.01-4), format_type (optional, Image format jpg/png/svg/pdf), svg_include_id (optional, Include IDs in SVG output), svg_simplify_stroke (optional, Simplify strokes in SVG output), use_absolute_bounds (optional, Use absolute bounds)"
 )
 async def figma_get_image(
-    fileKey: str,
+    file_key: str,
     ids: list[str],
     scale: float | None = None,
     format_type: str | None = None,  # Renamed from 'format' to avoid shadowing builtin
@@ -175,7 +181,7 @@ async def figma_get_image(
     """Get images for nodes in a Figma file.
 
     Args:
-        fileKey: The key of the file to get images from
+        file_key: The key of the file to get images from
         ids: Array of node IDs to render
         scale: Optional. Scale factor to render at (0.01-4)
         format_type: Optional. Image format (jpg, png, svg, pdf)
@@ -193,43 +199,46 @@ async def figma_get_image(
     }
 
     query_string = api_client.build_query_string(params)
-    return await api_client.make_request(f"/images/{fileKey}{query_string}")
+    return await api_client.make_request(f"/images/{file_key}{query_string}")
 
 
 @mcp.tool(
-    description="Get URLs for images used in a Figma file. Args: fileKey (required, The key of the file to get image fills from)"
+    description="Get URLs for images used in a Figma file. Args: file_key (required, The key of the file to get image fills from)"
 )
-async def figma_get_image_fills(fileKey: str) -> dict[str, Any]:
+async def figma_get_image_fills(file_key: str) -> dict[str, Any]:
     """Get URLs for images used in a Figma file.
 
     Args:
-        fileKey: The key of the file to get image fills from
+        file_key: The key of the file to get image fills from
     """
-    return await api_client.make_request(f"/files/{fileKey}/images")
+    return await api_client.make_request(f"/files/{file_key}/images")
 
 
 @mcp.tool(
-    description="Get comments on a Figma file. Args: fileKey (required, The key of the file to get comments from)"
+    description="Get comments on a Figma file. Args: file_key (required, The key of the file to get comments from)"
 )
-async def figma_get_comments(fileKey: str) -> dict[str, Any]:
+async def figma_get_comments(file_key: str) -> dict[str, Any]:
     """Get comments on a Figma file.
 
     Args:
-        fileKey: The key of the file to get comments from
+        file_key: The key of the file to get comments from
     """
-    return await api_client.make_request(f"/files/{fileKey}/comments")
+    return await api_client.make_request(f"/files/{file_key}/comments")
 
 
 @mcp.tool(
-    description="Post a comment on a Figma file. Args: fileKey (required, The key of the file to comment on), message (required, Comment message text), client_meta (optional, Position of the comment x/y/node_id/node_offset), comment_id (optional, ID of comment to reply to)"
+    description="Post a comment on a Figma file. Args: file_key (required, The key of the file to comment on), message (required, Comment message text), client_meta (optional, Position of the comment x/y/node_id/node_offset), comment_id (optional, ID of comment to reply to)"
 )
 async def figma_post_comment(
-    fileKey: str, message: str, client_meta: dict[str, Any] | None = None, comment_id: str | None = None
+    file_key: str,
+    message: str,
+    client_meta: dict[str, Any] | None = None,
+    comment_id: str | None = None,
 ) -> dict[str, Any]:
     """Post a comment on a Figma file.
 
     Args:
-        fileKey: The key of the file to comment on
+        file_key: The key of the file to comment on
         message: Comment message text
         client_meta: Optional. Position of the comment (x, y, node_id, node_offset)
         comment_id: Optional. ID of comment to reply to
@@ -242,20 +251,20 @@ async def figma_post_comment(
     if comment_id:
         comment_data["comment_id"] = comment_id
 
-    return await api_client.make_request(f"/files/{fileKey}/comments", "POST", comment_data)
+    return await api_client.make_request(f"/files/{file_key}/comments", "POST", comment_data)
 
 
 @mcp.tool(
-    description="Delete a comment from a Figma file. Args: fileKey (required, The key of the file to delete a comment from), comment_id (required, ID of the comment to delete)"
+    description="Delete a comment from a Figma file. Args: file_key (required, The key of the file to delete a comment from), comment_id (required, ID of the comment to delete)"
 )
-async def figma_delete_comment(fileKey: str, comment_id: str) -> dict[str, Any]:
+async def figma_delete_comment(file_key: str, comment_id: str) -> dict[str, Any]:
     """Delete a comment from a Figma file.
 
     Args:
-        fileKey: The key of the file to delete a comment from
+        file_key: The key of the file to delete a comment from
         comment_id: ID of the comment to delete
     """
-    return await api_client.make_request(f"/files/{fileKey}/comments/{comment_id}", "DELETE")
+    return await api_client.make_request(f"/files/{file_key}/comments/{comment_id}", "DELETE")
 
 
 @mcp.tool(
@@ -281,7 +290,10 @@ async def figma_get_team_projects(
     description="Get files for a project. Args: project_id (required, The project ID), page_size (optional, Number of items per page), cursor (optional, Cursor for pagination), branch_data (optional, Include branch data if true)"
 )
 async def figma_get_project_files(
-    project_id: str, page_size: int | None = None, cursor: str | None = None, branch_data: bool | None = None
+    project_id: str,
+    page_size: int | None = None,
+    cursor: str | None = None,
+    branch_data: bool | None = None,
 ) -> dict[str, Any]:
     """Get files for a project.
 
@@ -317,15 +329,15 @@ async def figma_get_team_components(
 
 
 @mcp.tool(
-    description="Get components from a file. Args: fileKey (required, The key of the file to get components from)"
+    description="Get components from a file. Args: file_key (required, The key of the file to get components from)"
 )
-async def figma_get_file_components(fileKey: str) -> dict[str, Any]:
+async def figma_get_file_components(file_key: str) -> dict[str, Any]:
     """Get components from a file.
 
     Args:
-        fileKey: The key of the file to get components from
+        file_key: The key of the file to get components from
     """
-    return await api_client.make_request(f"/files/{fileKey}/components")
+    return await api_client.make_request(f"/files/{file_key}/components")
 
 
 @mcp.tool(description="Get a component by key. Args: key (required, The component key)")
@@ -376,14 +388,14 @@ async def figma_get_team_styles(
     return await api_client.make_request(f"/teams/{team_id}/styles{query_string}")
 
 
-@mcp.tool(description="Get styles from a file. Args: fileKey (required, The key of the file to get styles from)")
-async def figma_get_file_styles(fileKey: str) -> dict[str, Any]:
+@mcp.tool(description="Get styles from a file. Args: file_key (required, The key of the file to get styles from)")
+async def figma_get_file_styles(file_key: str) -> dict[str, Any]:
     """Get styles from a file.
 
     Args:
-        fileKey: The key of the file to get styles from
+        file_key: The key of the file to get styles from
     """
-    return await api_client.make_request(f"/files/{fileKey}/styles")
+    return await api_client.make_request(f"/files/{file_key}/styles")
 
 
 @mcp.tool(description="Get a style by key. Args: key (required, The style key)")

@@ -27,12 +27,15 @@ async def test_read_file_content():
         temp_path = temp_file.name
 
     try:
-        # Test reading the file
+        # Test reading the entire file
         result = await read_file_content(temp_path)
         assert result["success"] is True
         assert result["content"] == "Test content"
         assert "size" in result
         assert "last_modified" in result
+        assert result["total_chunks"] == 1
+        assert result["chunk_index"] == 0
+        assert result["is_last_chunk"] is True
 
         # Test reading a non-existent file
         result = await read_file_content("/non/existent/file")
@@ -54,6 +57,35 @@ async def test_read_file_content():
             assert result["success"] is True
             assert result["content"] == "Test content"
             mock_expanduser.assert_called_once()
+
+        # Test reading with custom chunk size
+        result = await read_file_content(temp_path, chunk_size=5)
+        assert result["success"] is True
+        assert result["content"] == "Test "
+        assert result["chunk_size"] == 5
+        assert result["chunk_index"] == 0
+        assert result["total_chunks"] == 3  # "Test content" is 12 chars, so 3 chunks of 5 bytes
+        assert result["is_last_chunk"] is False
+
+        # Test reading second chunk
+        result = await read_file_content(temp_path, chunk_size=5, chunk_index=1)
+        assert result["success"] is True
+        assert result["content"] == "conte"
+        assert result["chunk_index"] == 1
+        assert result["is_last_chunk"] is False
+
+        # Test reading last chunk
+        result = await read_file_content(temp_path, chunk_size=5, chunk_index=2)
+        assert result["success"] is True
+        assert result["content"] == "nt"
+        assert result["chunk_index"] == 2
+        assert result["is_last_chunk"] is True
+        assert result["chunk_actual_size"] == 2  # Only 2 bytes in the last chunk
+
+        # Test reading with invalid chunk index
+        result = await read_file_content(temp_path, chunk_size=5, chunk_index=3)
+        assert result["success"] is False
+        assert "Invalid chunk index" in result["error"]
 
     finally:
         # Clean up
