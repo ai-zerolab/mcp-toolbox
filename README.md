@@ -6,6 +6,7 @@
 [![Commit activity](https://img.shields.io/github/commit-activity/m/ai-zerolab/mcp-toolbox)](https://img.shields.io/github/commit-activity/m/ai-zerolab/mcp-toolbox)
 [![License](https://img.shields.io/github/license/ai-zerolab/mcp-toolbox)](https://img.shields.io/github/license/ai-zerolab/mcp-toolbox)
 
+
 A comprehensive toolkit for enhancing LLM capabilities through the Model Context Protocol (MCP). This package provides a collection of tools that allow LLMs to interact with external services and APIs, extending their functionality beyond text generation.
 
 - **GitHub repository**: <https://github.com/ai-zerolab/mcp-toolbox/>
@@ -22,6 +23,14 @@ A comprehensive toolkit for enhancing LLM capabilities through the Model Context
 - **Comprehensive Testing**: Well-tested codebase with high test coverage
 
 ## Installation
+
+### Installing via Smithery
+
+To install Toolbox for LLM Enhancement for Claude Desktop automatically via [Smithery](https://smithery.ai/server/@ai-zerolab/mcp-toolbox):
+
+```bash
+npx -y @smithery/cli install @ai-zerolab/mcp-toolbox --client claude
+```
 
 ### Using pip
 
