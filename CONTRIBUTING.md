@@ -49,7 +49,7 @@ Please note this documentation assumes you already have `uv` and `Git` installed
 
 1. Fork the `mcp-toolbox` repo on GitHub.
 
-2. Clone your fork locally:
+1. Clone your fork locally:
 
 ```bash
 cd <directory_in_which_repo_should_be_created>
@@ -84,7 +84,7 @@ Now you can make your changes locally.
 
 6. Don't forget to add test cases for your added functionality to the `tests` directory.
 
-7. When you're done making changes, check that your changes pass the formatting tests.
+1. When you're done making changes, check that your changes pass the formatting tests.
 
 ```bash
 make check
@@ -122,5 +122,5 @@ Before you submit a pull request, check that it meets these guidelines:
 
 1. The pull request should include tests.
 
-2. If the pull request adds functionality, the docs should be updated.
+1. If the pull request adds functionality, the docs should be updated.
    Put your new functionality into a function with a docstring, and add the feature to the list in `README.md`.
