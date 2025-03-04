@@ -8,11 +8,11 @@ class Config(BaseSettings):
 
     enable_commond_tools: bool = True
     enable_file_ops_tools: bool = True
-    tool_home: str = Path("~/.zerolab/mcp-toolbox").expanduser()
+    tool_home: str = Path("~/.zerolab/mcp-toolbox").expanduser().as_posix()
 
     @property
     def cache_dir(self) -> str:
-        return (self.tool_home / "cache").expanduser().resolve().absolute().as_posix()
+        return (Path(self.tool_home) / "cache").expanduser().resolve().absolute().as_posix()
 
 
 if __name__ == "__main__":
