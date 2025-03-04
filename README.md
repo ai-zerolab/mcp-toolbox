@@ -24,6 +24,20 @@ A comprehensive toolkit for enhancing LLM capabilities through the Model Context
 
 ## Installation
 
+
+### Using uv (Recommended)
+
+We recommend using [uv](https://github.com/astral-sh/uv) to manage your environment.
+
+```bash
+# Install uv
+curl -LsSf https://astral.sh/uv/install.sh | sh  # For macOS/Linux
+# or
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"  # For Windows
+```
+
+Then you can use `uvx mcp-toolbox@latest stdio` as commands for running the MCP server for latest version.
+
 ### Installing via Smithery
 
 To install Toolbox for LLM Enhancement for Claude Desktop automatically via [Smithery](https://smithery.ai/server/@ai-zerolab/mcp-toolbox):
@@ -40,18 +54,7 @@ pip install mcp-toolbox
 
 And you can use `mcp-toolbox stdio` as commands for running the MCP server.
 
-### Using uv (Recommended)
 
-We recommend using [uv](https://github.com/astral-sh/uv) to manage your environment.
-
-```bash
-# Install uv
-curl -LsSf https://astral.sh/uv/install.sh | sh  # For macOS/Linux
-# or
-powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"  # For Windows
-```
-
-Then you can use `uvx mcp-toolbox@latest stdio` as commands for running the MCP server for latest version.
 
 ## Configuration
 

@@ -14,6 +14,6 @@ startCommand:
   commandFunction:
     # A JS function that produces the CLI command based on the given config to start the MCP on stdio.
     |-
-    (config) => ({ command: 'uv', args: ['run', 'mcp-toolbox', 'stdio'], env: { FIGMA_API_KEY: config.figmaApiKey } })
+    (config) => ({ command: 'uv', args: ['run', 'mcp-toolbox@latest', 'stdio'], env: { FIGMA_API_KEY: config.figmaApiKey } })
   exampleConfig:
     figmaApiKey: your-figma-api-key
