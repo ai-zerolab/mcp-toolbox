@@ -10,17 +10,17 @@ from mcp_toolbox.app import mcp
 
 
 @mcp.tool(
-    description="Read file content. Args: path (required, Path to the file to read), encoding (optional, File encoding), chunk_size (optional, Size of each chunk in bytes), chunk_index (optional, Index of the chunk to retrieve, 0-based)"
+    description="Read file content. Args: path (required, Path to the file to read), encoding (optional, File encoding), chunk_size (optional, Size of each chunk in bytes, default: 1MB), chunk_index (optional, Index of the chunk to retrieve, 0-based)"
 )
 async def read_file_content(
-    path: str, encoding: str = "utf-8", chunk_size: int = 1048576, chunk_index: int = 0
+    path: str, encoding: str = "utf-8", chunk_size: int = 1000000, chunk_index: int = 0
 ) -> dict[str, Any]:
     """Read content from a file, with support for chunked reading for large files.
 
     Args:
         path: Path to the file to read
         encoding: Optional. File encoding (default: utf-8)
-        chunk_size: Optional. Size of each chunk in bytes (default: 1048576, which is 1MB)
+        chunk_size: Optional. Size of each chunk in bytes (default: 1000000, which about 1MB)
         chunk_index: Optional. Index of the chunk to retrieve, 0-based (default: 0)
 
     Returns:

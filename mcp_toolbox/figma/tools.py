@@ -33,7 +33,10 @@ class FigmaApiClient:
     async def make_request(self, path: str, method: str = "GET", data: Any = None) -> dict[str, Any]:
         token = await self.get_access_token()
 
-        async with httpx.AsyncClient() as client:
+        async with httpx.AsyncClient(
+            transport=httpx.AsyncHTTPTransport(retries=3),
+            timeout=30,
+        ) as client:
             headers = {"X-Figma-Token": token}
             url = f"{self.BASE_URL}{path}"
 
