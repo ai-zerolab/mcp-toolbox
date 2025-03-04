@@ -4,6 +4,7 @@ import os
 import stat
 import tempfile
 from pathlib import Path
+from unittest.mock import patch
 
 import pytest
 
@@ -47,6 +48,13 @@ async def test_read_file_content():
         finally:
             os.rmdir(temp_dir)
 
+        # Test reading a file with tilde in path
+        with patch("pathlib.Path.expanduser", return_value=Path(temp_path)) as mock_expanduser:
+            result = await read_file_content("~/test_file.txt")
+            assert result["success"] is True
+            assert result["content"] == "Test content"
+            mock_expanduser.assert_called_once()
+
     finally:
         # Clean up
         os.unlink(temp_path)
@@ -78,6 +86,19 @@ async def test_write_file_content():
         assert os.path.exists(nested_path)
         with open(nested_path) as f:
             assert f.read() == "Nested content"
+
+        # Test writing to a file with tilde in path
+        tilde_path = "~/test_file_tilde.txt"
+        expanded_path = os.path.join(temp_dir, "test_file_tilde.txt")
+
+        with patch("pathlib.Path.expanduser", return_value=Path(expanded_path)) as mock_expanduser:
+            result = await write_file_content(tilde_path, "Tilde content")
+            assert result["success"] is True
+            mock_expanduser.assert_called_once()
+            # Verify the file was created at the expanded path
+            assert os.path.exists(expanded_path)
+            with open(expanded_path) as f:
+                assert f.read() == "Tilde content"
 
 
 @pytest.mark.asyncio
@@ -112,6 +133,15 @@ async def test_replace_in_file():
         result = await replace_in_file("/non/existent/file", r"test", "replacement")
         assert result["success"] is False
         assert "File not found" in result["error"]
+
+        # Test replacing in a file with tilde in path
+        with patch("pathlib.Path.expanduser", return_value=Path(temp_path)) as mock_expanduser:
+            result = await replace_in_file("~/test_file.txt", r"HXllX", "Hello")
+            assert result["success"] is True
+            assert result["replacements"] == 1
+            mock_expanduser.assert_called_once()
+            with open(temp_path) as f:
+                assert f.read() == "Hello universe! This is a test."
 
     finally:
         # Clean up
@@ -196,6 +226,14 @@ async def test_list_directory():
         result = await list_directory(file1_path)
         assert result["success"] is False
         assert "Path is not a directory" in result["error"]
+
+        # Test directory with tilde in path
+        with patch("pathlib.Path.expanduser", return_value=Path(temp_dir)) as mock_expanduser:
+            result = await list_directory("~/test_dir")
+            assert result["success"] is True
+            assert len(result["entries"]) == 3  # 2 files + 1 directory, no hidden files
+            assert result["count"] == 3
+            mock_expanduser.assert_called_once()
 
 
 def test_get_file_info():

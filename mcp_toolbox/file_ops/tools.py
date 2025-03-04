@@ -23,7 +23,7 @@ async def read_file_content(path: str, encoding: str = "utf-8") -> dict[str, Any
         Dictionary containing content and metadata
     """
     try:
-        file_path = Path(path)
+        file_path = Path(path).expanduser()
 
         if not file_path.exists():
             return {
@@ -82,7 +82,7 @@ async def write_file_content(path: str, content: str, encoding: str = "utf-8", a
         Dictionary containing success status and metadata
     """
     try:
-        file_path = Path(path)
+        file_path = Path(path).expanduser()
 
         # Create parent directories if they don't exist
         file_path.parent.mkdir(parents=True, exist_ok=True)
@@ -128,7 +128,7 @@ async def replace_in_file(
         Dictionary containing success status and replacement information
     """
     try:
-        file_path = Path(path)
+        file_path = Path(path).expanduser()
 
         if not file_path.exists():
             return {
@@ -290,7 +290,7 @@ async def list_directory(
         Dictionary containing directory contents and metadata
     """
     try:
-        dir_path = Path(path)
+        dir_path = Path(path).expanduser()
 
         if not dir_path.exists():
             return {

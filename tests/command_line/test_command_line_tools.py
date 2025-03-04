@@ -1,4 +1,5 @@
 import asyncio
+from pathlib import Path
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
@@ -119,7 +120,32 @@ async def test_execute_command_with_working_dir():
         # Verify subprocess was called with correct arguments
         mock_exec.assert_called_once()
         _, kwargs = mock_exec.call_args
-        assert kwargs["cwd"] == test_dir
+        assert kwargs["cwd"] == Path(test_dir)
+
+        # Verify the result contains expected fields
+        assert result["return_code"] == 0
+
+
+@pytest.mark.asyncio
+async def test_execute_command_with_tilde_in_working_dir():
+    """Test command execution with tilde in working directory."""
+    # Mock process with successful execution
+    mock_process = MockProcess(stdout=b"test output", stderr=b"", returncode=0)
+    test_dir = "~/test_dir"  # Using tilde in path
+
+    with (
+        patch("asyncio.create_subprocess_exec", return_value=mock_process) as mock_exec,
+        patch("pathlib.Path.expanduser", return_value=Path("/home/user/test_dir")) as mock_expanduser,
+    ):
+        result = await execute_command(["echo", "test"], working_dir=test_dir)
+
+        # Verify expanduser was called
+        mock_expanduser.assert_called_once()
+
+        # Verify subprocess was called with correct arguments
+        mock_exec.assert_called_once()
+        _, kwargs = mock_exec.call_args
+        assert kwargs["cwd"] == Path("/home/user/test_dir")
 
         # Verify the result contains expected fields
         assert result["return_code"] == 0

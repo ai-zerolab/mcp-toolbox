@@ -3,6 +3,7 @@
 import asyncio
 import contextlib
 import os
+from pathlib import Path
 from typing import Any
 
 from mcp_toolbox.app import mcp
@@ -35,13 +36,16 @@ async def execute_command(
         }
 
     try:
+        # Expand user home directory in working_dir if provided
+        expanded_working_dir = Path(working_dir).expanduser() if working_dir else working_dir
+
         # Create subprocess with current environment
         process = await asyncio.create_subprocess_exec(
             *command,
             stdout=asyncio.subprocess.PIPE,
             stderr=asyncio.subprocess.PIPE,
             env=os.environ,
-            cwd=working_dir,
+            cwd=expanded_working_dir,
         )
 
         try:

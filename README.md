@@ -42,9 +42,7 @@ curl -LsSf https://astral.sh/uv/install.sh | sh  # For macOS/Linux
 powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"  # For Windows
 ```
 
-Then you can use `uvx mcp-toolbox stdio` as commands for running the MCP server.
-
-To upgrade, use `uv tool upgrade mcp-toolbox`
+Then you can use `uvx mcp-toolbox@latest stdio` as commands for running the MCP server for latest version.
 
 ## Configuration
 
@@ -63,7 +61,7 @@ To use mcp-toolbox with Claude Desktop, add the following to your Claude Desktop
   "mcpServers": {
     "zerolab-toolbox": {
       "command": "uvx",
-      "args": ["mcp-toolbox", "stdio"],
+      "args": ["mcp-toolbox@latest", "stdio"],
       "env": {
         "FIGMA_API_KEY": "your-figma-api-key"
       }
