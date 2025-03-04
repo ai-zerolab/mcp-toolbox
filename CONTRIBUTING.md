@@ -44,11 +44,12 @@ If you are proposing a new feature:
 
 # Get Started!
 
+## Installing locally
+
 Ready to contribute? Here's how to set up `mcp-toolbox` for local development.
 Please note this documentation assumes you already have `uv` and `Git` installed and ready to go.
 
 1. Fork the `mcp-toolbox` repo on GitHub.
-
 1. Clone your fork locally:
 
 ```bash
@@ -65,7 +66,7 @@ cd mcp-toolbox
 Then, install and activate the environment with:
 
 ```bash
-uv sync
+make install
 ```
 
 4. Install pre-commit to run linters/formatters at commit time:
@@ -82,9 +83,11 @@ git checkout -b name-of-your-bugfix-or-feature
 
 Now you can make your changes locally.
 
-6. Don't forget to add test cases for your added functionality to the `tests` directory.
+Don't forget to add test cases for your added functionality to the `tests` directory.
 
-1. When you're done making changes, check that your changes pass the formatting tests.
+## After making your changes
+
+When you're done making changes, check that your changes pass the formatting tests.
 
 ```bash
 make check
@@ -96,8 +99,7 @@ Now, validate that all unit tests are passing:
 make test
 ```
 
-9. Before raising a pull request you should also run tox.
-   This will run the tests across different versions of Python:
+Before raising a pull request you should also run tox. This will run the tests across different versions of Python:
 
 ```bash
 tox
@@ -106,7 +108,7 @@ tox
 This requires you to have multiple versions of python installed.
 This step is also triggered in the CI/CD pipeline, so you could also choose to skip this step locally.
 
-10. Commit your changes and push your branch to GitHub:
+## Commit your changes and push your branch to GitHub:
 
 ```bash
 git add .
@@ -114,13 +116,12 @@ git commit -m "Your detailed description of your changes."
 git push origin name-of-your-bugfix-or-feature
 ```
 
-11. Submit a pull request through the GitHub website.
+Submit a pull request through the GitHub website.
 
 # Pull Request Guidelines
 
 Before you submit a pull request, check that it meets these guidelines:
 
 1. The pull request should include tests.
-
 1. If the pull request adds functionality, the docs should be updated.
    Put your new functionality into a function with a docstring, and add the feature to the list in `README.md`.
