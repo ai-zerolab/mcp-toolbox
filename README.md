@@ -151,19 +151,15 @@ mcp-toolbox sse --host localhost --port 9871
 
 ### Local Setup
 
-```bash
-# Clone the repository
-git clone https://github.com/yourusername/mcp-toolbox.git
-cd mcp-toolbox
+Fork the repository and clone it to your local machine.
 
-# Create and activate a virtual environment
-uv venv
+```bash
+# Install in development mode
+make install
+# Activate a virtual environment
 source .venv/bin/activate  # For macOS/Linux
 # or
 .venv\Scripts\activate  # For Windows
-
-# Install in development mode
-uv pip install -e ".[dev]"
 ```
 
 ### Running Tests
