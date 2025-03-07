@@ -122,6 +122,19 @@ uv run generate_config_template.py
 | `figma_get_file_styles`         | Get styles from a file                   |
 | `figma_get_style`               | Get a style by key                       |
 
+### XiaoyuZhouFM Tools
+
+| Tool                    | Description                                                                                |
+| ----------------------- | ------------------------------------------------------------------------------------------ |
+| `xiaoyuzhoufm_download` | Download a podcast episode from XiaoyuZhouFM with optional automatic m4a to mp3 conversion |
+
+### Audio Tools
+
+| Tool               | Description                                                      |
+| ------------------ | ---------------------------------------------------------------- |
+| `get_audio_length` | Get the length of an audio file in seconds                       |
+| `get_audio_text`   | Get transcribed text from a specific time range in an audio file |
+
 ## Usage Examples
 
 ### Running the MCP Server
@@ -146,6 +159,13 @@ mcp-toolbox sse --host localhost --port 9871
    - "What files are in the current directory?"
    - "What's the current system time?"
    - "Show me the contents of a specific file."
+1. Ask Claude to download podcasts from XiaoyuZhouFM:
+   - "Download this podcast episode: https://www.xiaoyuzhoufm.com/episode/67c3d80fb0167b8db9e3ec0f"
+   - "Download and convert to MP3 this podcast: https://www.xiaoyuzhoufm.com/episode/67c3d80fb0167b8db9e3ec0f"
+1. Ask Claude to work with audio files:
+   - "What's the length of this audio file: audio.m4a?"
+   - "Transcribe the audio from 60 to 90 seconds in audio.m4a"
+   - "Get the text from 2:30 to 3:00 in the audio file"
 
 ## Development
 
