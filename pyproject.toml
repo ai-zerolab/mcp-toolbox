@@ -5,7 +5,7 @@ description = "Maintenance of a set of tools to enhance LLM through MCP protocol
 authors = [{ name = "ai-zerolab", email = "jizhongsheng957@gmail.com" }]
 readme = "README.md"
 keywords = ['MCP', "Model Context Protocol", "LLM"]
-requires-python = ">=3.10,<4.0"
+requires-python = ">=3.10,<=3.12"
 classifiers = [
     "Intended Audience :: Developers",
     "Programming Language :: Python",
@@ -13,7 +13,6 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
-    "Programming Language :: Python :: 3.13",
     "Topic :: Software Development :: Libraries :: Python Modules",
 ]
 dependencies = [
