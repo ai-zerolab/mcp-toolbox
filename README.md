@@ -122,6 +122,12 @@ uv run generate_config_template.py
 | `figma_get_file_styles`         | Get styles from a file                   |
 | `figma_get_style`               | Get a style by key                       |
 
+### XiaoyuZhouFM Tools
+
+| Tool                    | Description                                                                                |
+| ----------------------- | ------------------------------------------------------------------------------------------ |
+| `xiaoyuzhoufm_download` | Download a podcast episode from XiaoyuZhouFM with optional automatic m4a to mp3 conversion |
+
 ## Usage Examples
 
 ### Running the MCP Server
@@ -146,6 +152,9 @@ mcp-toolbox sse --host localhost --port 9871
    - "What files are in the current directory?"
    - "What's the current system time?"
    - "Show me the contents of a specific file."
+1. Ask Claude to download podcasts from XiaoyuZhouFM:
+   - "Download this podcast episode: https://www.xiaoyuzhoufm.com/episode/67c3d80fb0167b8db9e3ec0f"
+   - "Download and convert to MP3 this podcast: https://www.xiaoyuzhoufm.com/episode/67c3d80fb0167b8db9e3ec0f"
 
 ## Development
 
