@@ -17,7 +17,7 @@ _audio_path = None
 _detected_language = None
 
 
-def load_model(model_name="tiny"):
+def load_model(model_name="base"):
     """
     Load and cache the Whisper model.
 
@@ -38,7 +38,7 @@ def load_model(model_name="tiny"):
     return _model
 
 
-def load_audio(audio_path, model_name="tiny"):
+def load_audio(audio_path, model_name="base"):
     """
     Load and cache the audio file.
 
@@ -114,7 +114,7 @@ async def get_audio_length(audio_path: str) -> dict[str, Any]:
     description="Get transcribed text from a specific time range in an audio file. Args: audio_path (required, The path to the audio file), start_time (required, Start time in seconds), end_time (required, End time in seconds), model_name (optional, Whisper model name: tiny, base, small, medium, large)"
 )
 async def get_audio_text(
-    audio_path: str, start_time: float, end_time: float, model_name: str = "tiny"
+    audio_path: str, start_time: float, end_time: float, model_name: str = "base"
 ) -> dict[str, Any]:
     """Extract and transcribe text from a specific time range in an audio file.
 
@@ -184,7 +184,7 @@ async def get_audio_text(
             "end_time": end_time,
             "time_range": f"{start_formatted} - {end_formatted}",
             "language": _detected_language,
-            "message": f"Transcribed text from {start_formatted} to {end_formatted}: {transcribed_text}",
+            "message": "Successfully transcribed audio",
         }
     except Exception as e:
         return {

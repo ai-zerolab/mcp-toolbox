@@ -19,7 +19,7 @@ def mock_whisper():
         # Mock the model
         mock_model = MagicMock()
         mock_model.detect_language.return_value = (None, {"en": 0.9, "zh": 0.1})
-        mock_model.transcribe.return_value = {"text": "This is a test transcription"}
+        mock_model.transcribe.return_value = {"text": "Successfully transcribed audio"}
         mock_whisper.load_model.return_value = mock_model
 
         yield mock_whisper
@@ -66,7 +66,7 @@ async def test_get_audio_text(mock_whisper, mock_os_path_exists):
     """Test get_audio_text function."""
     # Set up global variables in the module
     with patch("mcp_toolbox.audio.tools._detected_language", "en"):
-        result = await get_audio_text("test.m4a", 10.0, 20.0)
+        result = await get_audio_text("test.m4a", 10.0, 20.0, "base")
 
     # Check that the function returns the expected values
     assert "text" in result
@@ -75,11 +75,11 @@ async def test_get_audio_text(mock_whisper, mock_os_path_exists):
     assert "time_range" in result
     assert "language" in result
     assert "message" in result
-    assert result["text"] == "This is a test transcription"
+    assert result["text"] == "Successfully transcribed audio"
     assert result["start_time"] == 10.0
     assert result["end_time"] == 20.0
     assert result["time_range"] == "0:00:10 - 0:00:20"
-    assert "This is a test transcription" in result["message"]
+    assert "Successfully transcribed audio" in result["message"]
 
     # Check that whisper.load_model and transcribe were called
     mock_whisper.load_model.assert_called()
