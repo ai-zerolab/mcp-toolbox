@@ -17,7 +17,7 @@ _audio_path = None
 _detected_language = None
 
 
-def load_model(model_name="base"):
+def load_model(model_name="tiny"):
     """
     Load and cache the Whisper model.
 
@@ -38,7 +38,7 @@ def load_model(model_name="base"):
     return _model
 
 
-def load_audio(audio_path, model_name="base"):
+def load_audio(audio_path, model_name="tiny"):
     """
     Load and cache the audio file.
 
@@ -111,10 +111,10 @@ async def get_audio_length(audio_path: str) -> dict[str, Any]:
 
 
 @mcp.tool(
-    description="Get transcribed text from a specific time range in an audio file. Args: audio_path (required, The path to the audio file), start_time (required, Start time in seconds), end_time (required, End time in seconds), model_name (optional, Whisper model name: tiny, base, small, medium, large), initial_prompt (optional, Initial prompt to guide transcription)"
+    description="Get transcribed text from a specific time range in an audio file. Args: audio_path (required, The path to the audio file), start_time (required, Start time in seconds), end_time (required, End time in seconds), model_name (optional, Whisper model name: tiny, base, small, medium, large)"
 )
 async def get_audio_text(
-    audio_path: str, start_time: float, end_time: float, model_name: str = "base", initial_prompt: str | None = None
+    audio_path: str, start_time: float, end_time: float, model_name: str = "tiny"
 ) -> dict[str, Any]:
     """Extract and transcribe text from a specific time range in an audio file.
 
@@ -132,16 +132,14 @@ async def get_audio_text(
         if not os.path.exists(audio_path):
             raise ValueError(f"Audio file not found: {audio_path}")
 
-        # Set default initial prompt based on detected language
-        if initial_prompt is None:
-            # Load audio to detect language if not already loaded
-            _ = load_audio(audio_path, model_name)
-            if _detected_language == "zh":
-                initial_prompt = "以下是普通话的句子"
-            elif _detected_language == "en":
-                initial_prompt = "The following is English speech"
-            else:
-                initial_prompt = ""
+        # Load audio to detect language if not already loaded
+        _ = load_audio(audio_path, model_name)
+        if _detected_language == "zh":
+            initial_prompt = "以下是普通话的句子"
+        elif _detected_language == "en":
+            initial_prompt = "The following is English speech"
+        else:
+            initial_prompt = ""
 
         # Load model and audio (uses cached versions if already loaded)
         model = load_model(model_name)
@@ -166,7 +164,12 @@ async def get_audio_text(
             segment = whisper.pad_or_trim(segment, 0.5 * sample_rate)
 
         # Transcribe the segment
-        result = model.transcribe(segment, language=_detected_language, initial_prompt=initial_prompt, verbose=False)
+        result = model.transcribe(
+            segment,
+            language=_detected_language,
+            initial_prompt=initial_prompt,
+            verbose=False,
+        )
 
         # Format time range for display
         start_formatted = str(datetime.timedelta(seconds=int(start_time)))
