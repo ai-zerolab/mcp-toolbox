@@ -2,6 +2,7 @@
 
 import datetime
 import os
+from pathlib import Path
 from typing import Any
 
 import whisper
@@ -55,6 +56,7 @@ def load_audio(audio_path, model_name="base"):
     model = load_model(model_name)
 
     # Only reload if it's a different file or not loaded yet
+    audio_path = Path(audio_path).expanduser().resolve().absolute().as_posix()
     if _audio is None or _audio_path != audio_path:
         logger.info(f"Loading audio: {audio_path}")
         _audio = whisper.load_audio(audio_path)
