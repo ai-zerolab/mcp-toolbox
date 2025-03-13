@@ -16,12 +16,16 @@ classifiers = [
     "Topic :: Software Development :: Libraries :: Python Modules",
 ]
 dependencies = [
+    "anyio>=4.8.0",
+    "duckduckgo-search>=7.5.2",
     "httpx>=0.28.1",
     "loguru>=0.7.3",
+    "markitdown[all]~=0.1.0a1",
     "mcp[cli]>=1.3.0",
     "openai-whisper>=20240930",
     "pydantic>=2.10.6",
     "pydantic-settings[toml]>=2.8.0",
+    "tavily-python>=0.5.1",
     "typer>=0.15.2",
 ]
 

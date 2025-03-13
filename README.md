@@ -59,6 +59,8 @@ And you can use `mcp-toolbox stdio` as commands for running the MCP server.
 The following environment variables can be configured:
 
 - `FIGMA_API_KEY`: API key for Figma integration
+- `TAVILY_API_KEY`: API key for Tavily integration
+- `DUCKDUCKGO_API_KEY`: API key for DuckDuckGo integration
 
 ### Claude Desktop Configuration
 
@@ -71,7 +73,9 @@ To use mcp-toolbox with Claude Desktop, add the following to your Claude Desktop
       "command": "uvx",
       "args": ["mcp-toolbox@latest", "stdio"],
       "env": {
-        "FIGMA_API_KEY": "your-figma-api-key"
+        "FIGMA_API_KEY": "your-figma-api-key",
+        "TAVILY_API_KEY": "your-tavily-api-key",
+        "DUCKDUCKGO_API_KEY": "your-duckduckgo-api-key"
       }
     }
   }
@@ -135,6 +139,13 @@ uv run generate_config_template.py
 | `get_audio_length` | Get the length of an audio file in seconds                       |
 | `get_audio_text`   | Get transcribed text from a specific time range in an audio file |
 
+### Markitdown Tools
+
+| Tool                       | Description                                   |
+| -------------------------- | --------------------------------------------- |
+| `convert_file_to_markdown` | Convert any file to Markdown using MarkItDown |
+| `convert_to_markdown`      | Convert text to Markdown using MarkItDown     |
+
 ## Usage Examples
 
 ### Running the MCP Server
@@ -166,6 +177,9 @@ mcp-toolbox sse --host localhost --port 9871
    - "What's the length of this audio file: audio.m4a?"
    - "Transcribe the audio from 60 to 90 seconds in audio.m4a"
    - "Get the text from 2:30 to 3:00 in the audio file"
+1. Ask Claude to convert files or text to Markdown:
+   - "Convert this file to Markdown: document.docx"
+   - "Convert this HTML to Markdown: <h1>Hello World</h1>"
 
 ## Development
 
