@@ -146,6 +146,15 @@ uv run generate_config_template.py
 | `convert_file_to_markdown` | Convert any file to Markdown using MarkItDown |
 | `convert_to_markdown`      | Convert text to Markdown using MarkItDown     |
 
+### Web Tools
+
+| Tool                     | Description                                        |
+| ------------------------ | -------------------------------------------------- |
+| `get_html`               | Get HTML content from a URL                        |
+| `save_html`              | Save HTML from a URL to a file                     |
+| `search_with_tavily`     | Search the web using Tavily (requires API key)     |
+| `search_with_duckduckgo` | Search the web using DuckDuckGo (requires API key) |
+
 ## Usage Examples
 
 ### Running the MCP Server
@@ -180,6 +189,10 @@ mcp-toolbox sse --host localhost --port 9871
 1. Ask Claude to convert files or text to Markdown:
    - "Convert this file to Markdown: document.docx"
    - "Convert this HTML to Markdown: <h1>Hello World</h1>"
+1. Ask Claude to work with web content:
+   - "Get the HTML content from https://example.com"
+   - "Save the HTML from https://example.com to a file"
+   - "Search the web for 'artificial intelligence news'"
 
 ## Development
 
