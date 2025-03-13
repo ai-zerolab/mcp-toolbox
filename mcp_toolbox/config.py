@@ -5,6 +5,8 @@ from pydantic_settings import BaseSettings
 
 class Config(BaseSettings):
     figma_api_key: str | None = None
+    tavily_api_key: str | None = None
+    duckduckgo_api_key: str | None = None
 
     enable_commond_tools: bool = True
     enable_file_ops_tools: bool = True
