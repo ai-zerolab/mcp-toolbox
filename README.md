@@ -71,7 +71,7 @@ To use mcp-toolbox with Claude Desktop, add the following to your Claude Desktop
   "mcpServers": {
     "zerolab-toolbox": {
       "command": "uvx",
-      "args": ["mcp-toolbox@latest", "stdio"],
+      "args": ["--prerelease=allow", "mcp-toolbox@latest", "stdio"],
       "env": {
         "FIGMA_API_KEY": "your-figma-api-key",
         "TAVILY_API_KEY": "your-tavily-api-key",
