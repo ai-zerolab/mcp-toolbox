@@ -67,7 +67,7 @@ def load_audio(audio_path, model_name="base"):
         logger.info(f"Audio duration: {datetime.timedelta(seconds=int(audio_duration))!s}")
 
         # Detect language from the first chunk
-        chunk_samples = int(30 * 16000)  # Use 30 seconds for language detection
+        chunk_samples = 30 * 16000  # Use 30 seconds for language detection
         first_chunk = whisper.pad_or_trim(_audio[:chunk_samples])
         mel = whisper.log_mel_spectrogram(first_chunk).to(model.device)
         _, probs = model.detect_language(mel)
