@@ -15,6 +15,8 @@ if config.enable_audio_tools:
     import mcp_toolbox.audio.tools
 if config.figma_api_key:
     import mcp_toolbox.figma.tools
+if config.bfl_api_key:
+    import mcp_toolbox.flux.tools
 import mcp_toolbox.markitdown.tools  # noqa: E402
 import mcp_toolbox.web.tools  # noqa: E402
 import mcp_toolbox.xiaoyuzhoufm.tools  # noqa: E402, F401

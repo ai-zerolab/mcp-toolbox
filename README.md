@@ -61,6 +61,7 @@ The following environment variables can be configured:
 - `FIGMA_API_KEY`: API key for Figma integration
 - `TAVILY_API_KEY`: API key for Tavily integration
 - `DUCKDUCKGO_API_KEY`: API key for DuckDuckGo integration
+- `BFL_API_KEY`: API key for Flux image generation API
 
 ### Claude Desktop Configuration
 
@@ -75,7 +76,8 @@ To use mcp-toolbox with Claude Desktop, add the following to your Claude Desktop
       "env": {
         "FIGMA_API_KEY": "your-figma-api-key",
         "TAVILY_API_KEY": "your-tavily-api-key",
-        "DUCKDUCKGO_API_KEY": "your-duckduckgo-api-key"
+        "DUCKDUCKGO_API_KEY": "your-duckduckgo-api-key",
+        "BFL_API_KEY": "your-bfl-api-key"
       }
     }
   }
@@ -155,6 +157,12 @@ uv run generate_config_template.py
 | `search_with_tavily`     | Search the web using Tavily (requires API key)     |
 | `search_with_duckduckgo` | Search the web using DuckDuckGo (requires API key) |
 
+### Flux Image Generation Tools
+
+| Tool                  | Description                                                |
+| --------------------- | ---------------------------------------------------------- |
+| `flux_generate_image` | Generate an image using the Flux API and save it to a file |
+
 ## Usage Examples
 
 ### Running the MCP Server
@@ -193,6 +201,10 @@ mcp-toolbox sse --host localhost --port 9871
    - "Get the HTML content from https://example.com"
    - "Save the HTML from https://example.com to a file"
    - "Search the web for 'artificial intelligence news'"
+1. Ask Claude to generate images with Flux:
+   - "Generate an image of a beautiful sunset over mountains"
+   - "Create an image of a futuristic city and save it to my desktop"
+   - "Generate a portrait of a cat in a space suit"
 
 ## Development
 
