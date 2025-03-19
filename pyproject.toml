@@ -121,7 +121,7 @@ ignore = [
 ]
 
 [tool.ruff.lint.per-file-ignores]
-"tests/*" = ["S101", "C901", "F841", "S108"]
+"tests/*" = ["S101", "C901", "F841", "S108", "F821"]
 "mcp_toolbox/flux/api.py" = ["C901", "SIM102"]
 
 [tool.ruff.format]
