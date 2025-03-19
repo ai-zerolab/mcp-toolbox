@@ -829,7 +829,6 @@ dependencies = [
     { name = "loguru" },
     { name = "markitdown", extra = ["all"] },
     { name = "mcp", extra = ["cli"] },
-    { name = "openai-whisper" },
     { name = "pillow" },
     { name = "pydantic" },
     { name = "pydantic-settings", extra = ["toml"] },
@@ -837,9 +836,18 @@ dependencies = [
     { name = "typer" },
 ]
 
+[package.optional-dependencies]
+all = [
+    { name = "openai-whisper" },
+]
+audio = [
+    { name = "openai-whisper" },
+]
+
 [package.dev-dependencies]
 dev = [
     { name = "deptry" },
+    { name = "mcp-toolbox", extra = ["audio"] },
     { name = "mkdocs" },
     { name = "mkdocs-material" },
     { name = "mkdocstrings", extra = ["python"] },
@@ -859,17 +867,20 @@ requires-dist = [
     { name = "loguru", specifier = ">=0.7.3" },
     { name = "markitdown", extras = ["all"], specifier = "~=0.1.0a1" },
     { name = "mcp", extras = ["cli"], specifier = ">=1.3.0" },
-    { name = "openai-whisper", specifier = ">=20240930" },
+    { name = "mcp-toolbox", extras = ["audio"], marker = "extra == 'all'" },
+    { name = "openai-whisper", marker = "extra == 'audio'", specifier = ">=20240930" },
     { name = "pillow", specifier = ">=11.1.0" },
     { name = "pydantic", specifier = ">=2.10.6" },
     { name = "pydantic-settings", extras = ["toml"], specifier = ">=2.8.0" },
     { name = "tavily-python", specifier = ">=0.5.1" },
     { name = "typer", specifier = ">=0.15.2" },
 ]
+provides-extras = ["audio", "all"]
 
 [package.metadata.requires-dev]
 dev = [
     { name = "deptry", specifier = ">=0.22.0" },
+    { name = "mcp-toolbox", extras = ["audio"] },
     { name = "mkdocs", specifier = ">=1.4.2" },
     { name = "mkdocs-material", specifier = ">=8.5.10" },
     { name = "mkdocstrings", extras = ["python"], specifier = ">=0.26.1" },

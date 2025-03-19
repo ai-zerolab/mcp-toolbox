@@ -1,6 +1,7 @@
 from mcp.server.fastmcp import FastMCP
 
 from mcp_toolbox.config import Config
+from mcp_toolbox.log import logger
 
 mcp = FastMCP("email")
 config = Config()
@@ -12,7 +13,12 @@ if config.enable_commond_tools:
 if config.enable_file_ops_tools:
     import mcp_toolbox.file_ops.tools
 if config.enable_audio_tools:
-    import mcp_toolbox.audio.tools
+    try:
+        import mcp_toolbox.audio.tools
+    except ImportError:
+        logger.error(
+            "Audio tools is not available. Please install the required dependencies. e.g. `pip install mcp-toolbox[audio]`"
+        )
 if config.figma_api_key:
     import mcp_toolbox.figma.tools
 if config.bfl_api_key:
