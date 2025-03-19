@@ -4,7 +4,10 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from mcp_toolbox.audio.tools import get_audio_length, get_audio_text
+try:
+    from mcp_toolbox.audio.tools import get_audio_length, get_audio_text
+except ImportError:
+    pytest.skip("Audio tools are not available.", allow_module_level=True)
 
 
 @pytest.fixture

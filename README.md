@@ -34,7 +34,11 @@ curl -LsSf https://astral.sh/uv/install.sh | sh  # For macOS/Linux
 powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"  # For Windows
 ```
 
-Then you can use `uvx mcp-toolbox@latest stdio` as commands for running the MCP server for latest version.
+Then you can use `uvx "mcp-toolbox@latest" stdio` as commands for running the MCP server for latest version. **Audio tools are not included in the default installation.**, you can include them by installing the `all` extra:
+
+```bash
+uvx "mcp-toolbox[all]@latest" stdio
+```
 
 ### Installing via Smithery
 
@@ -47,7 +51,7 @@ npx -y @smithery/cli install @ai-zerolab/mcp-toolbox --client claude
 ### Using pip
 
 ```bash
-pip install mcp-toolbox
+pip install "mcp-toolbox[all]"
 ```
 
 And you can use `mcp-toolbox stdio` as commands for running the MCP server.
@@ -63,16 +67,44 @@ The following environment variables can be configured:
 - `DUCKDUCKGO_API_KEY`: API key for DuckDuckGo integration
 - `BFL_API_KEY`: API key for Flux image generation API
 
-### Claude Desktop Configuration
+### Full Configuration
 
-To use mcp-toolbox with Claude Desktop, add the following to your Claude Desktop configuration file:
+To use mcp-toolbox with Claude Desktop/Cline/Cursor/..., add the following to your configuration file:
 
 ```json
 {
   "mcpServers": {
     "zerolab-toolbox": {
       "command": "uvx",
-      "args": ["--prerelease=allow", "--python=3.12", "mcp-toolbox@latest", "stdio"],
+      "args": [
+        "--prerelease=allow",
+        "mcp-toolbox@latest",
+        "stdio"
+      ],
+      "env": {
+        "FIGMA_API_KEY": "your-figma-api-key",
+        "TAVILY_API_KEY": "your-tavily-api-key",
+        "DUCKDUCKGO_API_KEY": "your-duckduckgo-api-key",
+        "BFL_API_KEY": "your-bfl-api-key"
+      }
+    }
+  }
+}
+```
+
+For full features:
+
+```json
+{
+  "mcpServers": {
+    "zerolab-toolbox": {
+      "command": "uvx",
+      "args": [
+        "--prerelease=allow",
+        "--python=3.12",
+        "mcp-toolbox[all]@latest",
+        "stdio"
+      ],
       "env": {
         "FIGMA_API_KEY": "your-figma-api-key",
         "TAVILY_API_KEY": "your-tavily-api-key",
@@ -146,7 +178,7 @@ uv run generate_config_template.py
 | Tool                       | Description                                   |
 | -------------------------- | --------------------------------------------- |
 | `convert_file_to_markdown` | Convert any file to Markdown using MarkItDown |
-| `convert_to_markdown`      | Convert text to Markdown using MarkItDown     |
+| `convert_url_to_markdown`  | Convert a URL to Markdown using MarkItDown    |
 
 ### Web Tools
 
@@ -194,9 +226,9 @@ mcp-toolbox sse --host localhost --port 9871
    - "What's the length of this audio file: audio.m4a?"
    - "Transcribe the audio from 60 to 90 seconds in audio.m4a"
    - "Get the text from 2:30 to 3:00 in the audio file"
-1. Ask Claude to convert files or text to Markdown:
+1. Ask Claude to convert files or URLs to Markdown:
    - "Convert this file to Markdown: document.docx"
-   - "Convert this HTML to Markdown: <h1>Hello World</h1>"
+   - "Convert this webpage to Markdown: https://example.com"
 1. Ask Claude to work with web content:
    - "Get the HTML content from https://example.com"
    - "Save the HTML from https://example.com to a file"
