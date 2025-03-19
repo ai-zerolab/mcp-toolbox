@@ -67,9 +67,32 @@ The following environment variables can be configured:
 - `DUCKDUCKGO_API_KEY`: API key for DuckDuckGo integration
 - `BFL_API_KEY`: API key for Flux image generation API
 
-### Claude Desktop Configuration
+### Full Configuration
 
-To use mcp-toolbox with Claude Desktop, add the following to your Claude Desktop configuration file:
+To use mcp-toolbox with Claude Desktop/Cline/Cursor/..., add the following to your configuration file:
+
+```json
+{
+  "mcpServers": {
+    "zerolab-toolbox": {
+      "command": "uvx",
+      "args": [
+        "--prerelease=allow",
+        "mcp-toolbox@latest",
+        "stdio"
+      ],
+      "env": {
+        "FIGMA_API_KEY": "your-figma-api-key",
+        "TAVILY_API_KEY": "your-tavily-api-key",
+        "DUCKDUCKGO_API_KEY": "your-duckduckgo-api-key",
+        "BFL_API_KEY": "your-bfl-api-key"
+      }
+    }
+  }
+}
+```
+
+For full features:
 
 ```json
 {
