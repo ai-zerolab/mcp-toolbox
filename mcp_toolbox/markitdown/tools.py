@@ -29,8 +29,7 @@ async def convert_file_to_markdown(input_file: str, output_file: str) -> dict[st
 
     output_file.parent.mkdir(parents=True, exist_ok=True)
 
-    original_text = input_file.read_text()
-    c = md.convert(original_text).text_content
+    c = md.convert(input_file.as_posix()).text_content
     output_file.write_text(c)
 
     return {
@@ -41,7 +40,24 @@ async def convert_file_to_markdown(input_file: str, output_file: str) -> dict[st
 
 
 @mcp.tool(
-    description="Convert text to Markdown, using MarkItDown. Args: text (required, The text to convert)",
+    description="Convert a URL to Markdown, using MarkItDown. Args: url (required, The URL to convert), output_file (required, The output Markdown file)",
 )
-async def convert_str_to_markdown(text: str) -> str:
-    return md.convert(text).text_content
+async def convert_url_to_markdown(url: str, output_file: str) -> dict[str, Any]:
+    """Convert a URL to Markdown
+
+    Args:
+        url: The URL to convert
+        output_file: The output Markdown file"
+    """
+    output_file: Path = Path(output_file).expanduser().resolve().absolute()
+
+    output_file.parent.mkdir(parents=True, exist_ok=True)
+
+    c = md.convert_url(url).text_content
+    output_file.write_text(c)
+
+    return {
+        "success": True,
+        "url": url,
+        "output_file": output_file.as_posix(),
+    }
