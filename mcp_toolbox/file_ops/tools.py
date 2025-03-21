@@ -4,16 +4,21 @@ import re
 import stat
 from datetime import datetime
 from pathlib import Path
-from typing import Any
+from typing import Annotated, Any
+
+from pydantic import Field
 
 from mcp_toolbox.app import mcp
 
 
-@mcp.tool(
-    description="Read file content. Args: path (required, Path to the file to read), encoding (optional, File encoding), chunk_size (optional, Size of each chunk in bytes, default: 1MB), chunk_index (optional, Index of the chunk to retrieve, 0-based)"
-)
+@mcp.tool(description="Read file content.")
 async def read_file_content(
-    path: str, encoding: str = "utf-8", chunk_size: int = 1000000, chunk_index: int = 0
+    path: Annotated[str, Field(description="Path to the file to read")],
+    encoding: Annotated[str, Field(default="utf-8", description="File encoding")] = "utf-8",
+    chunk_size: Annotated[
+        int, Field(default=1000000, description="Size of each chunk in bytes, default: 1MB")
+    ] = 1000000,
+    chunk_index: Annotated[int, Field(default=0, description="Index of the chunk to retrieve, 0-based")] = 0,
 ) -> dict[str, Any]:
     """Read content from a file, with support for chunked reading for large files.
 
@@ -107,10 +112,13 @@ async def read_file_content(
         }
 
 
-@mcp.tool(
-    description="Write content to a file. Args: path (required, Path to the file to write), content (required, Content to write), encoding (optional, File encoding), append (optional, Whether to append to the file)"
-)
-async def write_file_content(path: str, content: str, encoding: str = "utf-8", append: bool = False) -> dict[str, Any]:
+@mcp.tool(description="Write content to a file.")
+async def write_file_content(
+    path: Annotated[str, Field(description="Path to the file to write")],
+    content: Annotated[str, Field(description="Content to write")],
+    encoding: Annotated[str, Field(default="utf-8", description="File encoding")] = "utf-8",
+    append: Annotated[bool, Field(default=False, description="Whether to append to the file")] = False,
+) -> dict[str, Any]:
     """Write content to a file.
 
     Args:
@@ -150,11 +158,13 @@ async def write_file_content(path: str, content: str, encoding: str = "utf-8", a
         }
 
 
-@mcp.tool(
-    description="Replace content in a file using regular expressions. Args: path (required, Path to the file), pattern (required, Regular expression pattern), replacement (required, Replacement string), encoding (optional, File encoding), count (optional, Maximum number of replacements)"
-)
+@mcp.tool(description="Replace content in a file using regular expressions.")
 async def replace_in_file(
-    path: str, pattern: str, replacement: str, encoding: str = "utf-8", count: int = 0
+    path: Annotated[str, Field(description="Path to the file")],
+    pattern: Annotated[str, Field(description="Regular expression pattern")],
+    replacement: Annotated[str, Field(description="Replacement string")],
+    encoding: Annotated[str, Field(default="utf-8", description="File encoding")] = "utf-8",
+    count: Annotated[int, Field(default=0, description="Maximum number of replacements")] = 0,
 ) -> dict[str, Any]:
     """Replace content in a file using regular expressions.
 
@@ -313,11 +323,12 @@ def _get_file_info(path: Path) -> dict[str, Any]:
     }
 
 
-@mcp.tool(
-    description="List directory contents with detailed information. Args: path (required, Directory path), recursive (optional, Whether to list recursively), max_depth (optional, Maximum recursion depth), include_hidden (optional, Whether to include hidden files)"
-)
+@mcp.tool(description="List directory contents with detailed information.")
 async def list_directory(
-    path: str, recursive: bool = False, max_depth: int = -1, include_hidden: bool = False
+    path: Annotated[str, Field(description="Directory path")],
+    recursive: Annotated[bool, Field(default=False, description="Whether to list recursively")] = False,
+    max_depth: Annotated[int, Field(default=-1, description="Maximum recursion depth")] = -1,
+    include_hidden: Annotated[bool, Field(default=False, description="Whether to include hidden files")] = False,
 ) -> dict[str, Any]:
     """List directory contents with detailed information.
 

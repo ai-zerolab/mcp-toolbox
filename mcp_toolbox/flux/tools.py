@@ -1,25 +1,24 @@
 """Flux API image generation tools."""
 
 from pathlib import Path
-from typing import Any
+from typing import Annotated, Any
 
 from loguru import logger
+from pydantic import Field
 
 from mcp_toolbox.app import mcp
 from mcp_toolbox.config import Config
 from mcp_toolbox.flux.api import ApiException, ImageRequest
 
 
-@mcp.tool(
-    description="Generate an image using the Flux API and save it to a local file. Args: prompt (required, The text prompt for image generation), output_dir (required, The directory to save the image), model_name (optional, The model version to use), width (optional, Width of the image in pixels), height (optional, Height of the image in pixels), seed (optional, Seed for reproducibility)"
-)
+@mcp.tool(description="Generate an image using the Flux API and save it to a local file.")
 async def flux_generate_image(
-    prompt: str,
-    output_dir: str,
-    model_name: str = "flux.1.1-pro",
-    width: int | None = None,
-    height: int | None = None,
-    seed: int | None = None,
+    prompt: Annotated[str, Field(description="The text prompt for image generation")],
+    output_dir: Annotated[str, Field(description="The directory to save the image")],
+    model_name: Annotated[str, Field(default="flux.1.1-pro", description="The model version to use")] = "flux.1.1-pro",
+    width: Annotated[int | None, Field(default=None, description="Width of the image in pixels")] = None,
+    height: Annotated[int | None, Field(default=None, description="Height of the image in pixels")] = None,
+    seed: Annotated[int | None, Field(default=None, description="Seed for reproducibility")] = None,
 ) -> dict[str, Any]:
     """Generate an image using the Flux API and save it to a local file.
 
