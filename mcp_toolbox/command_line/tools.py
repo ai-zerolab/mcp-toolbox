@@ -4,29 +4,20 @@ import asyncio
 import contextlib
 import os
 from pathlib import Path
-from typing import Any
+from typing import Annotated, Any
+
+from pydantic import Field
 
 from mcp_toolbox.app import mcp
 
 
-@mcp.tool(
-    description="Execute a command line instruction. Args: command (required, The command to execute as a list of strings), timeout_seconds (optional, Maximum execution time in seconds), working_dir (optional, Directory to execute the command in)"
-)
+@mcp.tool(description="Execute a command line instruction.")
 async def execute_command(
-    command: list[str],
-    timeout_seconds: int = 30,
-    working_dir: str | None = None,
+    command: Annotated[list[str], Field(description="The command to execute as a list of strings")],
+    timeout_seconds: Annotated[int, Field(default=30, description="Maximum execution time in seconds")] = 30,
+    working_dir: Annotated[str | None, Field(default=None, description="Directory to execute the command in")] = None,
 ) -> dict[str, Any]:
-    """Execute a command line instruction.
-
-    Args:
-        command: The command to execute as a list of strings
-        timeout_seconds: Optional. Maximum execution time in seconds (default: 30)
-        working_dir: Optional. Directory to execute the command in
-
-    Returns:
-        Dictionary containing stdout, stderr, and return code
-    """
+    """Execute a command line instruction."""
     if not command:
         return {
             "error": "Command cannot be empty",

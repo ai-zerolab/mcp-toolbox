@@ -1,7 +1,8 @@
 from pathlib import Path
-from typing import Any
+from typing import Annotated, Any
 
 from markitdown import MarkItDown
+from pydantic import Field
 
 from mcp_toolbox.app import mcp
 
@@ -9,9 +10,12 @@ md = MarkItDown(enable_builtins=True, enable_plugins=True)
 
 
 @mcp.tool(
-    description="Convert any file to Markdown, using MarkItDown. Args: input_file (required, The input Markdown file), output_file (required, The output HTML file)",
+    description="Convert any file to Markdown, using MarkItDown.",
 )
-async def convert_file_to_markdown(input_file: str, output_file: str) -> dict[str, Any]:
+async def convert_file_to_markdown(
+    input_file: Annotated[str, Field(description="The input Markdown file")],
+    output_file: Annotated[str, Field(description="The output HTML file")],
+) -> dict[str, Any]:
     """Convert any file to Markdown
 
     Args:
@@ -40,9 +44,12 @@ async def convert_file_to_markdown(input_file: str, output_file: str) -> dict[st
 
 
 @mcp.tool(
-    description="Convert a URL to Markdown, using MarkItDown. Args: url (required, The URL to convert), output_file (required, The output Markdown file)",
+    description="Convert a URL to Markdown, using MarkItDown.",
 )
-async def convert_url_to_markdown(url: str, output_file: str) -> dict[str, Any]:
+async def convert_url_to_markdown(
+    url: Annotated[str, Field(description="The URL to convert")],
+    output_file: Annotated[str, Field(description="The output Markdown file")],
+) -> dict[str, Any]:
     """Convert a URL to Markdown
 
     Args:

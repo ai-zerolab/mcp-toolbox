@@ -3,10 +3,11 @@
 import datetime
 import os
 from pathlib import Path
-from typing import Any
+from typing import Annotated, Any
 
 import whisper
 from loguru import logger
+from pydantic import Field
 
 from mcp_toolbox.app import mcp
 
@@ -77,10 +78,10 @@ def load_audio(audio_path, model_name="base"):
     return _audio
 
 
-@mcp.tool(
-    description="Get the length of an audio file in seconds. Args: audio_path (required, The path to the audio file)"
-)
-async def get_audio_length(audio_path: str) -> dict[str, Any]:
+@mcp.tool(description="Get the length of an audio file in seconds.")
+async def get_audio_length(
+    audio_path: Annotated[str, Field(description="The path to the audio file")],
+) -> dict[str, Any]:
     """Get the length of an audio file in seconds.
 
     Args:
@@ -112,11 +113,14 @@ async def get_audio_length(audio_path: str) -> dict[str, Any]:
         }
 
 
-@mcp.tool(
-    description="Get transcribed text from a specific time range in an audio file. Args: audio_path (required, The path to the audio file), start_time (required, Start time in seconds), end_time (required, End time in seconds), model_name (optional, Whisper model name: tiny, base, small, medium, large)"
-)
+@mcp.tool(description="Get transcribed text from a specific time range in an audio file.")
 async def get_audio_text(
-    audio_path: str, start_time: float, end_time: float, model_name: str = "base"
+    audio_path: Annotated[str, Field(description="The path to the audio file")],
+    start_time: Annotated[float, Field(description="Start time in seconds")],
+    end_time: Annotated[float, Field(description="End time in seconds")],
+    model_name: Annotated[
+        str, Field(default="base", description="Whisper model name: tiny, base, small, medium, large")
+    ] = "base",
 ) -> dict[str, Any]:
     """Extract and transcribe text from a specific time range in an audio file.
 
