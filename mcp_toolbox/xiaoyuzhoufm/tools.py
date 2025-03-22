@@ -2,10 +2,11 @@
 
 import os
 import re
-from typing import Any
+from typing import Annotated, Any
 
 import httpx
 from loguru import logger
+from pydantic import Field
 
 from mcp_toolbox.app import mcp
 from mcp_toolbox.config import Config
@@ -93,10 +94,11 @@ class XiaoyuZhouFMCrawler:
 crawler = XiaoyuZhouFMCrawler()
 
 
-@mcp.tool(
-    description="Crawl and download a podcast episode from XiaoyuZhouFM. Args: xiaoyuzhoufm_url (required, The URL of the XiaoyuZhouFM episode), output_dir (required, The directory to save the audio file)"
-)
-async def xiaoyuzhoufm_download(xiaoyuzhoufm_url: str, output_dir: str) -> dict[str, Any]:
+@mcp.tool(description="Crawl and download a podcast episode from XiaoyuZhouFM.")
+async def xiaoyuzhoufm_download(
+    xiaoyuzhoufm_url: Annotated[str, Field(description="The URL of the XiaoyuZhouFM episode")],
+    output_dir: Annotated[str, Field(description="The directory to save the audio file")],
+) -> dict[str, Any]:
     """Crawl and download a podcast episode from XiaoyuZhouFM.
 
     Args:
