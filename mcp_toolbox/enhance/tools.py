@@ -11,6 +11,10 @@ from mcp_toolbox.app import mcp
 async def think(
     thought: Annotated[str, Field(description="A thought to think about.")],
 ) -> dict[str, str]:
+    """
+    see: https://www.anthropic.com/engineering/claude-think-tool
+    """
+
     return {
         "thought": thought,
     }
