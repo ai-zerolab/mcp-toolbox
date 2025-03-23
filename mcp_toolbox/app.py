@@ -19,6 +19,8 @@ if config.enable_audio_tools:
         logger.error(
             "Audio tools is not available. Please install the required dependencies. e.g. `pip install mcp-toolbox[audio]`"
         )
+if config.enabel_enhance_tools:
+    import mcp_toolbox.enhance.tools
 if config.figma_api_key:
     import mcp_toolbox.figma.tools
 if config.bfl_api_key:
