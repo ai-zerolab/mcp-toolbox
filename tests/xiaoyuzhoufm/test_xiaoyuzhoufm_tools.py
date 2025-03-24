@@ -47,7 +47,7 @@ async def test_extract_audio_url():
     # Create a mock response
     mock_response = MagicMock()
     mock_response.text = MOCK_HTML_CONTENT
-    mock_response.raise_for_status = AsyncMock()
+    mock_response.raise_for_status = MagicMock()  # Changed from AsyncMock to MagicMock
 
     # Create a mock client
     mock_client = AsyncMock()
@@ -68,7 +68,7 @@ async def test_download_audio(tmp_path):
     # Create a mock response with binary content
     mock_response = MagicMock()
     mock_response.content = b"test audio content"
-    mock_response.raise_for_status = AsyncMock()
+    mock_response.raise_for_status = MagicMock()  # Changed from AsyncMock to MagicMock
 
     # Create a mock client
     mock_client = AsyncMock()

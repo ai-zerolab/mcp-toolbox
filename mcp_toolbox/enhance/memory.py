@@ -37,10 +37,7 @@ def get_current_session_memory() -> LocalMemory:
 class LocalMemory:
     @classmethod
     def new_session(cls) -> LocalMemory:
-        config = Config()
-
-        session_id = uuid.uuid4().hex
-        return cls(session_id, config.memory_file)
+        return cls.use_session(uuid.uuid4().hex)
 
     @classmethod
     def use_session(cls, session_id: str) -> LocalMemory:
@@ -52,6 +49,7 @@ class LocalMemory:
         self.memory_file = Path(memory_file)
 
         self.memory_file.parent.mkdir(parents=True, exist_ok=True)
+        self.memory_file.touch(exist_ok=True)
         self.current_memory: np.ndarray = self._load()
 
     def _load(self) -> np.ndarray:
@@ -62,7 +60,7 @@ class LocalMemory:
             with portalocker.Lock(self.memory_file, "rb") as f:
                 memory = np.load(f, allow_pickle=True)
         except Exception as e:
-            logger.exception(f"Error loading memory: {e}")
+            logger.warning(f"Error loading memory: {e}")
             memory = np.empty((0, 4), dtype=object)
 
         return memory
@@ -96,7 +94,7 @@ class LocalMemory:
                 f.truncate()
                 np.save(f, updated_memory)
         except Exception as e:
-            logger.exception(f"Error storing memory: {e}")
+            logger.warning(f"Error storing memory: {e}")
             raise
 
         self.current_memory = self._load()
