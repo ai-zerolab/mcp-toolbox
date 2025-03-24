@@ -77,7 +77,7 @@ else:
         else:
             memory: LocalMemory = get_current_session_memory()
         results = memory.query(query, top_k=top_k, cross_session=cross_session)
-        return [r.model_dump() for r in results]
+        return [r.model_dump(exclude_none=True) for r in results]
 
     @mcp.tool(description="Clear all memories in the memory database.")
     def forget() -> dict[str, str]:
