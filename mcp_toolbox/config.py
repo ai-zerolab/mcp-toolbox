@@ -1,3 +1,4 @@
+import platform
 from pathlib import Path
 
 from pydantic_settings import BaseSettings
@@ -21,7 +22,14 @@ class Config(BaseSettings):
 
     @property
     def memory_file(self) -> str:
-        return (Path(self.tool_home) / "memory.sqlite").expanduser().resolve().absolute().as_posix()
+        # Use Documents folder for macOS to enable sync across multiple Mac devices
+        if platform.system() == "Darwin":  # macOS
+            documents_path = Path("~/Documents/zerolab/mcp-toolbox").expanduser()
+            documents_path.mkdir(parents=True, exist_ok=True)
+            return (documents_path / "memory").resolve().absolute().as_posix()
+        else:
+            # Default behavior for other operating systems
+            return (Path(self.tool_home) / "memory").expanduser().resolve().absolute().as_posix()
 
 
 if __name__ == "__main__":

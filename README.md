@@ -34,7 +34,9 @@ curl -LsSf https://astral.sh/uv/install.sh | sh  # For macOS/Linux
 powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"  # For Windows
 ```
 
-Then you can use `uvx "mcp-toolbox@latest" stdio` as commands for running the MCP server for latest version. **Audio tools are not included in the default installation.**, you can include them by installing the `all` extra:
+Then you can use `uvx "mcp-toolbox@latest" stdio` as commands for running the MCP server for latest version. **Audio and memory tools are not included in the default installation.**, you can include them by installing the `all` extra:
+
+> [audio] for audio tools, [memory] for memory tools, [all] for all tools
 
 ```bash
 uvx "mcp-toolbox[all]@latest" stdio
@@ -76,11 +78,7 @@ To use mcp-toolbox with Claude Desktop/Cline/Cursor/..., add the following to yo
   "mcpServers": {
     "zerolab-toolbox": {
       "command": "uvx",
-      "args": [
-        "--prerelease=allow",
-        "mcp-toolbox@latest",
-        "stdio"
-      ],
+      "args": ["--prerelease=allow", "mcp-toolbox@latest", "stdio"],
       "env": {
         "FIGMA_API_KEY": "your-figma-api-key",
         "TAVILY_API_KEY": "your-tavily-api-key",
