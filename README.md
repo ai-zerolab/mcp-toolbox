@@ -34,7 +34,9 @@ curl -LsSf https://astral.sh/uv/install.sh | sh  # For macOS/Linux
 powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"  # For Windows
 ```
 
-Then you can use `uvx "mcp-toolbox@latest" stdio` as commands for running the MCP server for latest version. **Audio tools are not included in the default installation.**, you can include them by installing the `all` extra:
+Then you can use `uvx "mcp-toolbox@latest" stdio` as commands for running the MCP server for latest version. **Audio and memory tools are not included in the default installation.**, you can include them by installing the `all` extra:
+
+> [audio] for audio tools, [memory] for memory tools, [all] for all tools
 
 ```bash
 uvx "mcp-toolbox[all]@latest" stdio
@@ -67,6 +69,13 @@ The following environment variables can be configured:
 - `DUCKDUCKGO_API_KEY`: API key for DuckDuckGo integration
 - `BFL_API_KEY`: API key for Flux image generation API
 
+### Memory Storage
+
+Memory tools store data in the following locations:
+
+- **macOS**: `~/Documents/zerolab/mcp-toolbox/memory` (syncs across devices via iCloud)
+- **Other platforms**: `~/.zerolab/mcp-toolbox/memory`
+
 ### Full Configuration
 
 To use mcp-toolbox with Claude Desktop/Cline/Cursor/..., add the following to your configuration file:
@@ -76,11 +85,7 @@ To use mcp-toolbox with Claude Desktop/Cline/Cursor/..., add the following to yo
   "mcpServers": {
     "zerolab-toolbox": {
       "command": "uvx",
-      "args": [
-        "--prerelease=allow",
-        "mcp-toolbox@latest",
-        "stdio"
-      ],
+      "args": ["--prerelease=allow", "mcp-toolbox@latest", "stdio"],
       "env": {
         "FIGMA_API_KEY": "your-figma-api-key",
         "TAVILY_API_KEY": "your-tavily-api-key",
@@ -173,6 +178,16 @@ uv run generate_config_template.py
 | `get_audio_length` | Get the length of an audio file in seconds                       |
 | `get_audio_text`   | Get transcribed text from a specific time range in an audio file |
 
+### Memory Tools
+
+| Tool             | Description                                                             |
+| ---------------- | ----------------------------------------------------------------------- |
+| `think`          | Use the tool to think about something and append the thought to the log |
+| `get_session_id` | Get the current session ID                                              |
+| `remember`       | Store a memory (brief and detail) in the memory database                |
+| `recall`         | Query memories from the database with semantic search                   |
+| `forget`         | Clear all memories in the memory database                               |
+
 ### Markitdown Tools
 
 | Tool                       | Description                                   |
@@ -237,6 +252,12 @@ mcp-toolbox sse --host localhost --port 9871
    - "Generate an image of a beautiful sunset over mountains"
    - "Create an image of a futuristic city and save it to my desktop"
    - "Generate a portrait of a cat in a space suit"
+1. Ask Claude to use memory tools:
+   - "Remember this important fact: The capital of France is Paris"
+   - "What's my current session ID?"
+   - "Recall any information about France"
+   - "Think about the implications of climate change"
+   - "Forget all stored memories"
 
 ## Development
 
