@@ -161,7 +161,12 @@ async def write_file_content(
 @mcp.tool(description="Replace content in a file using regular expressions.")
 async def replace_in_file(
     path: Annotated[str, Field(description="Path to the file")],
-    pattern: Annotated[str, Field(description="Regular expression pattern")],
+    pattern: Annotated[
+        str,
+        Field(
+            description="Python regular expression pattern (re module). Supports groups, character classes, quantifiers, etc. Examples: '[a-z]+' for lowercase words, '\\d{3}-\\d{4}' for number patterns. Remember to escape backslashes."
+        ),
+    ],
     replacement: Annotated[str, Field(description="Replacement string")],
     encoding: Annotated[str, Field(default="utf-8", description="File encoding")] = "utf-8",
     count: Annotated[int, Field(default=0, description="Maximum number of replacements")] = 0,
@@ -324,11 +329,14 @@ def _get_file_info(path: Path) -> dict[str, Any]:
 
 
 @mcp.tool(description="List directory contents with detailed information.")
-async def list_directory(
+async def list_directory(  # noqa: C901
     path: Annotated[str, Field(description="Directory path")],
     recursive: Annotated[bool, Field(default=False, description="Whether to list recursively")] = False,
     max_depth: Annotated[int, Field(default=-1, description="Maximum recursion depth")] = -1,
     include_hidden: Annotated[bool, Field(default=False, description="Whether to include hidden files")] = False,
+    ignore_patterns: Annotated[
+        list[str] | None, Field(default=[], description="Glob patterns to ignore (e.g. ['node_modules', '*.tmp'])")
+    ] = None,
 ) -> dict[str, Any]:
     """List directory contents with detailed information.
 
@@ -337,10 +345,12 @@ async def list_directory(
         recursive: Optional. Whether to list recursively (default: False)
         max_depth: Optional. Maximum recursion depth (default: -1, which means no limit)
         include_hidden: Optional. Whether to include hidden files (default: False)
+        ignore_patterns: Optional. Glob patterns to ignore (default: [], e.g. ['node_modules', '*.tmp'])
 
     Returns:
         Dictionary containing directory contents and metadata
     """
+    ignore_patterns = ignore_patterns or []
     try:
         dir_path = Path(path).expanduser()
 
@@ -360,6 +370,23 @@ async def list_directory(
 
         entries = []
 
+        # Import fnmatch for pattern matching
+        import fnmatch
+
+        def should_ignore(path: Path) -> bool:
+            """Check if a path should be ignored based on ignore patterns.
+
+            Args:
+                path: Path to check
+
+            Returns:
+                True if the path should be ignored, False otherwise
+            """
+            if not ignore_patterns:
+                return False
+
+            return any(fnmatch.fnmatch(path.name, pattern) for pattern in ignore_patterns)
+
         def process_directory(current_path: Path, current_depth: int = 0) -> None:
             """Process a directory and its contents recursively.
 
@@ -378,6 +405,10 @@ async def list_directory(
                 for item in current_path.iterdir():
                     # Skip hidden files if not included
                     if not include_hidden and item.name.startswith("."):
+                        continue
+
+                    # Skip ignored patterns
+                    if should_ignore(item):
                         continue
 
                     # Get file information

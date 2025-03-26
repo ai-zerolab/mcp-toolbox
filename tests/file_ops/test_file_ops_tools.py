@@ -224,30 +224,79 @@ async def test_list_directory():
         with open(subfile_path, "w") as f:
             f.write("Subfile content")
 
+        # Create files for testing ignore patterns
+        temp_file_path = os.path.join(temp_dir, "temp.tmp")
+        with open(temp_file_path, "w") as f:
+            f.write("Temporary file content")
+
+        node_modules_path = os.path.join(temp_dir, "node_modules")
+        os.mkdir(node_modules_path)
+
+        node_module_file_path = os.path.join(node_modules_path, "package.json")
+        with open(node_module_file_path, "w") as f:
+            f.write('{"name": "test-package"}')
+
+        cache_file_path = os.path.join(temp_dir, "cache.pyc")
+        with open(cache_file_path, "w") as f:
+            f.write("Python cache file")
+
         # Test basic directory listing
         result = await list_directory(temp_dir)
         assert result["success"] is True
         assert result["path"] == temp_dir
-        assert len(result["entries"]) == 3  # 2 files + 1 directory, no hidden files
-        assert result["count"] == 3
+        assert len(result["entries"]) == 6  # 4 files + 2 directories, no hidden files
+        assert result["count"] == 6
 
         # Test with hidden files
         result = await list_directory(temp_dir, include_hidden=True)
         assert result["success"] is True
-        assert len(result["entries"]) == 4  # 3 files + 1 directory, including hidden file
-        assert result["count"] == 4
+        assert len(result["entries"]) == 7  # 5 files + 2 directories, including hidden file
+        assert result["count"] == 7
 
         # Test recursive listing
         result = await list_directory(temp_dir, recursive=True)
         assert result["success"] is True
-        assert len(result["entries"]) == 4  # 2 files + 1 directory + 1 subfile
-        assert result["count"] == 4
+        assert len(result["entries"]) == 8  # 4 files + 2 directories + 1 subfile + 1 node_module file
+        assert result["count"] == 8
 
         # Test with max depth
         result = await list_directory(temp_dir, recursive=True, max_depth=0)
         assert result["success"] is True
-        assert len(result["entries"]) == 3  # Only top-level entries
-        assert result["count"] == 3
+        assert len(result["entries"]) == 6  # Only top-level entries
+        assert result["count"] == 6
+
+        # Test with ignore patterns - single pattern
+        result = await list_directory(temp_dir, ignore_patterns=["*.tmp"])
+        assert result["success"] is True
+        assert len(result["entries"]) == 5  # Excluding temp.tmp
+        assert result["count"] == 5
+        # Verify temp.tmp is not in the results
+        assert not any(entry["name"] == "temp.tmp" for entry in result["entries"])
+
+        # Test with ignore patterns - directory pattern
+        result = await list_directory(temp_dir, recursive=True, ignore_patterns=["node_modules"])
+        assert result["success"] is True
+        assert len(result["entries"]) == 6  # Excluding node_modules directory and its contents
+        assert result["count"] == 6
+        # Verify node_modules is not in the results
+        assert not any(entry["name"] == "node_modules" for entry in result["entries"])
+
+        # Test with multiple ignore patterns
+        result = await list_directory(temp_dir, ignore_patterns=["*.tmp", "*.pyc"])
+        assert result["success"] is True
+        assert len(result["entries"]) == 4  # Excluding temp.tmp and cache.pyc
+        assert result["count"] == 4
+        # Verify neither temp.tmp nor cache.pyc are in the results
+        assert not any(entry["name"] == "temp.tmp" for entry in result["entries"])
+        assert not any(entry["name"] == "cache.pyc" for entry in result["entries"])
+
+        # Test combining ignore patterns with other parameters
+        result = await list_directory(
+            temp_dir, recursive=True, include_hidden=True, ignore_patterns=["node_modules", "*.tmp", "*.pyc"]
+        )
+        assert result["success"] is True
+        assert len(result["entries"]) == 5  # Including hidden files but excluding ignored patterns
+        assert result["count"] == 5
 
         # Test non-existent directory
         result = await list_directory("/non/existent/dir")
@@ -263,8 +312,8 @@ async def test_list_directory():
         with patch("pathlib.Path.expanduser", return_value=Path(temp_dir)) as mock_expanduser:
             result = await list_directory("~/test_dir")
             assert result["success"] is True
-            assert len(result["entries"]) == 3  # 2 files + 1 directory, no hidden files
-            assert result["count"] == 3
+            assert len(result["entries"]) == 6  # 4 files + 2 directories, no hidden files
+            assert result["count"] == 6
             mock_expanduser.assert_called_once()
 
 
