@@ -16,7 +16,8 @@ async def read_file_content(
     path: Annotated[str, Field(description="Path to the file to read")],
     encoding: Annotated[str, Field(default="utf-8", description="File encoding")] = "utf-8",
     chunk_size: Annotated[
-        int, Field(default=1000000, description="Size of each chunk in bytes, default: 1MB")
+        int,
+        Field(default=1000000, description="Size of each chunk in bytes, default: 1MB"),
     ] = 1000000,
     chunk_index: Annotated[int, Field(default=0, description="Index of the chunk to retrieve, 0-based")] = 0,
 ) -> dict[str, Any]:
@@ -335,7 +336,24 @@ async def list_directory(  # noqa: C901
     max_depth: Annotated[int, Field(default=-1, description="Maximum recursion depth")] = -1,
     include_hidden: Annotated[bool, Field(default=False, description="Whether to include hidden files")] = False,
     ignore_patterns: Annotated[
-        list[str] | None, Field(default=[], description="Glob patterns to ignore (e.g. ['node_modules', '*.tmp'])")
+        list[str] | None,
+        Field(
+            default=[
+                "node_modules",
+                "dist",
+                "build",
+                "public",
+                "static",
+                ".next",
+                ".git",
+                ".vscode",
+                ".idea",
+                ".DS_Store",
+                ".env",
+                ".venv",
+            ],
+            description="Glob patterns to ignore (e.g. ['node_modules', '*.tmp'])",
+        ),
     ] = None,
 ) -> dict[str, Any]:
     """List directory contents with detailed information.
@@ -345,12 +363,29 @@ async def list_directory(  # noqa: C901
         recursive: Optional. Whether to list recursively (default: False)
         max_depth: Optional. Maximum recursion depth (default: -1, which means no limit)
         include_hidden: Optional. Whether to include hidden files (default: False)
-        ignore_patterns: Optional. Glob patterns to ignore (default: [], e.g. ['node_modules', '*.tmp'])
+        ignore_patterns: Optional. Glob patterns to ignore (default: ['node_modules', 'dist', 'build', 'public', 'static', '.next', '.git', '.vscode', '.idea', '.DS_Store', '.env', '.venv'])
 
     Returns:
         Dictionary containing directory contents and metadata
     """
-    ignore_patterns = ignore_patterns or []
+    ignore_patterns = (
+        ignore_patterns
+        if ignore_patterns is not None
+        else [
+            "node_modules",
+            "dist",
+            "build",
+            "public",
+            "static",
+            ".next",
+            ".git",
+            ".vscode",
+            ".idea",
+            ".DS_Store",
+            ".env",
+            ".venv",
+        ]
+    )
     try:
         dir_path = Path(path).expanduser()
 
