@@ -244,23 +244,25 @@ async def test_list_directory():
         result = await list_directory(temp_dir)
         assert result["success"] is True
         assert result["path"] == temp_dir
-        assert len(result["entries"]) == 6  # 4 files + 2 directories, no hidden files
-        assert result["count"] == 6
+        assert (
+            len(result["entries"]) == 5
+        )  # 4 files + 1 directory (node_modules is ignored by default), no hidden files
+        assert result["count"] == 5
 
         # Test with hidden files
         result = await list_directory(temp_dir, include_hidden=True)
         assert result["success"] is True
-        assert len(result["entries"]) == 7  # 5 files + 2 directories, including hidden file
-        assert result["count"] == 7
+        assert len(result["entries"]) == 6  # 4 files + 1 directory + 1 hidden file (node_modules is ignored by default)
+        assert result["count"] == 6
 
-        # Test recursive listing
-        result = await list_directory(temp_dir, recursive=True)
+        # Test recursive listing with explicit empty ignore patterns to see all files
+        result = await list_directory(temp_dir, recursive=True, ignore_patterns=[])
         assert result["success"] is True
         assert len(result["entries"]) == 8  # 4 files + 2 directories + 1 subfile + 1 node_module file
         assert result["count"] == 8
 
-        # Test with max depth
-        result = await list_directory(temp_dir, recursive=True, max_depth=0)
+        # Test with max depth (with empty ignore patterns to ensure consistent behavior)
+        result = await list_directory(temp_dir, recursive=True, max_depth=0, ignore_patterns=[])
         assert result["success"] is True
         assert len(result["entries"]) == 6  # Only top-level entries
         assert result["count"] == 6
@@ -290,13 +292,77 @@ async def test_list_directory():
         assert not any(entry["name"] == "temp.tmp" for entry in result["entries"])
         assert not any(entry["name"] == "cache.pyc" for entry in result["entries"])
 
-        # Test combining ignore patterns with other parameters
+        # Test default ignore patterns
+        # Create directories and files that should be ignored by default
+        git_dir_path = os.path.join(temp_dir, ".git")
+        os.mkdir(git_dir_path)
+        git_file_path = os.path.join(git_dir_path, "config")
+        with open(git_file_path, "w") as f:
+            f.write("Git config content")
+
+        # Create a .DS_Store file that should be ignored by default
+        ds_store_path = os.path.join(temp_dir, ".DS_Store")
+        with open(ds_store_path, "w") as f:
+            f.write("DS_Store content")
+
+        # Create a node_modules directory that should be ignored by default
+        node_modules_dir = os.path.join(temp_dir, "node_modules")
+        os.makedirs(node_modules_dir, exist_ok=True)
+        node_modules_file = os.path.join(node_modules_dir, "package.json")
+        with open(node_modules_file, "w") as f:
+            f.write('{"name": "test-package"}')
+
+        # Test with explicit ignore patterns that match the default ones
         result = await list_directory(
-            temp_dir, recursive=True, include_hidden=True, ignore_patterns=["node_modules", "*.tmp", "*.pyc"]
+            temp_dir, recursive=True, include_hidden=True, ignore_patterns=[".git", ".DS_Store", "node_modules"]
         )
         assert result["success"] is True
-        assert len(result["entries"]) == 5  # Including hidden files but excluding ignored patterns
+        # Should not include .git directory or .DS_Store file due to specified ignore patterns
+        assert not any(entry["name"] == ".git" for entry in result["entries"])
+        assert not any(entry["name"] == ".DS_Store" for entry in result["entries"])
+        assert not any(entry["name"] == "node_modules" for entry in result["entries"])
+        assert any(entry["name"] == ".hidden_file" for entry in result["entries"])  # Should include other hidden files
+
+        # Test with explicit None for ignore_patterns (should use defaults)
+        result = await list_directory(temp_dir, recursive=True, include_hidden=True, ignore_patterns=None)
+        assert result["success"] is True
+        # Should not include node_modules directory due to default ignore patterns
+        assert not any(entry["name"] == "node_modules" for entry in result["entries"])
+        # Should not include .git directory due to default ignore patterns
+        assert not any(entry["name"] == ".git" for entry in result["entries"])
+        # Should not include .DS_Store file due to default ignore patterns
+        assert not any(entry["name"] == ".DS_Store" for entry in result["entries"])
+
+        # Test with empty list for ignore_patterns (should override defaults)
+        result = await list_directory(temp_dir, recursive=True, include_hidden=True, ignore_patterns=[])
+        assert result["success"] is True
+        # Should include .git directory and .DS_Store file since we're overriding defaults with empty list
+        assert any(entry["name"] == ".git" for entry in result["entries"])
+        assert any(entry["name"] == ".DS_Store" for entry in result["entries"])
+
+        # Test combining ignore patterns with other parameters
+        result = await list_directory(
+            temp_dir,
+            recursive=True,
+            include_hidden=True,
+            ignore_patterns=["node_modules", "*.tmp", "*.pyc", ".git", ".DS_Store"],
+        )
+        assert result["success"] is True
+        # Should include only .hidden_file, file1.txt, file2.txt, subdir, and subfile.txt
+        assert len(result["entries"]) == 5
         assert result["count"] == 5
+        # Verify specific files are included/excluded
+        assert any(entry["name"] == ".hidden_file" for entry in result["entries"])
+        assert any(entry["name"] == "file1.txt" for entry in result["entries"])
+        assert any(entry["name"] == "file2.txt" for entry in result["entries"])
+        assert any(entry["name"] == "subdir" for entry in result["entries"])
+        assert any(entry["name"] == "subfile.txt" for entry in result["entries"])
+        # Verify excluded files
+        assert not any(entry["name"] == "node_modules" for entry in result["entries"])
+        assert not any(entry["name"] == "temp.tmp" for entry in result["entries"])
+        assert not any(entry["name"] == "cache.pyc" for entry in result["entries"])
+        assert not any(entry["name"] == ".git" for entry in result["entries"])
+        assert not any(entry["name"] == ".DS_Store" for entry in result["entries"])
 
         # Test non-existent directory
         result = await list_directory("/non/existent/dir")
@@ -308,9 +374,9 @@ async def test_list_directory():
         assert result["success"] is False
         assert "Path is not a directory" in result["error"]
 
-        # Test directory with tilde in path
+        # Test directory with tilde in path (with empty ignore patterns to ensure consistent behavior)
         with patch("pathlib.Path.expanduser", return_value=Path(temp_dir)) as mock_expanduser:
-            result = await list_directory("~/test_dir")
+            result = await list_directory("~/test_dir", ignore_patterns=[])
             assert result["success"] is True
             assert len(result["entries"]) == 6  # 4 files + 2 directories, no hidden files
             assert result["count"] == 6
