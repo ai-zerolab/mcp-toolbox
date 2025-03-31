@@ -3,7 +3,7 @@ from mcp.server.fastmcp import FastMCP
 from mcp_toolbox.config import Config
 from mcp_toolbox.log import logger
 
-mcp = FastMCP("email")
+mcp = FastMCP("mcp-toolbox")
 config = Config()
 
 
