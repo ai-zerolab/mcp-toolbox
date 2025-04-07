@@ -22,7 +22,7 @@ repos:
           [mdformat-gfm, mdformat-frontmatter, mdformat-footnote]
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: "v0.11.2"
+    rev: "v0.11.4"
     hooks:
       - id: ruff
         args: [--exit-non-zero-on-fix]
