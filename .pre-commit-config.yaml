@@ -1,6 +1,6 @@
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: "v5.0.0"
+    rev: "v6.0.0"
     hooks:
       - id: check-case-conflict
       - id: check-merge-conflict
@@ -15,14 +15,14 @@ repos:
       - id: trailing-whitespace
 
   - repo: https://github.com/executablebooks/mdformat
-    rev: 0.7.22
+    rev: 1.0.0
     hooks:
       - id: mdformat
         additional_dependencies:
           [mdformat-gfm, mdformat-frontmatter, mdformat-footnote]
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: "v0.11.8"
+    rev: "v0.16.6"
     hooks:
       - id: ruff
         args: [--exit-non-zero-on-fix]
